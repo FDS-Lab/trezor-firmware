@@ -82,14 +82,11 @@ class TestStorageCache(unittest.TestCase):
             msg = Initialize(**kwargs)
             return await_result(handle_Initialize(DUMMY_CONTEXT, msg))
 
-        def call_ClearSession():
-            return await_result(handle_ClearSession(DUMMY_CONTEXT, ClearSession()))
-
         session_id = call_Initialize().session_id
         cache.set(KEY, "hello")
         self.assertEqual(cache.get(KEY), "hello")
 
-        call_ClearSession()
+        call_Initialize()
         self.assertIsNone(cache.get(KEY))
         new_session_id = cache.get_session_id()
         self.assertNotEqual(session_id, new_session_id)

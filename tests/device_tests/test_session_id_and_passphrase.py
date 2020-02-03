@@ -107,8 +107,8 @@ def test_clear_session(client):
     assert session_id == new_session_id
 
     # by clearing the session, the id is lost
-    response = client.call(messages.ClearSession())
-    assert isinstance(response, messages.Success)
+    response = client.call(messages.Initialize())
+    assert isinstance(response, messages.Features)
 
     # cannot resume the old session now
     new_session_id = _init_session(client, session_id=session_id)
@@ -124,9 +124,9 @@ def test_clear_session_passphrase(client):
     # now the passphrase is cached
     assert _get_xpub(client, passphrase=None) == XPUB_PASSPHRASE_A
 
-    # ClearSession will erase the cached passphrase
-    response = client.call(messages.ClearSession())
-    assert isinstance(response, messages.Success)
+    # Erase the cached passphrase
+    response = client.call(messages.Initialize())
+    assert isinstance(response, messages.Features)
 
     # we have to enter passphrase again
     assert _get_xpub(client, passphrase="A") == XPUB_PASSPHRASE_A
