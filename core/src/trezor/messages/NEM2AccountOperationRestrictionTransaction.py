@@ -4,7 +4,7 @@ import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
         EnumTypeNEM2AccountRestrictionFlags = Literal[1, 2, 4, 16385, 16388, 32769, 32770, 32772, 49153, 49156]
         EnumTypeNEM2EntityType = Literal[0, 16705, 16708, 16712, 16716, 16717, 16718, 16720, 16721, 16722, 16724, 16725, 16961, 16964, 16973, 16974, 16976, 16977, 16978, 17220, 17230, 17232]
@@ -17,18 +17,19 @@ class NEM2AccountOperationRestrictionTransaction(p.MessageType):
 
     def __init__(
         self,
-        restriction_type: EnumTypeNEM2AccountRestrictionFlags = None,
-        restriction_additions: List[EnumTypeNEM2EntityType] = None,
-        restriction_deletions: List[EnumTypeNEM2EntityType] = None,
+        *,
+        restriction_additions: Optional[List[EnumTypeNEM2EntityType]] = None,
+        restriction_deletions: Optional[List[EnumTypeNEM2EntityType]] = None,
+        restriction_type: Optional[EnumTypeNEM2AccountRestrictionFlags] = None,
     ) -> None:
-        self.restriction_type = restriction_type
         self.restriction_additions = restriction_additions if restriction_additions is not None else []
         self.restriction_deletions = restriction_deletions if restriction_deletions is not None else []
+        self.restriction_type = restriction_type
 
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('restriction_type', p.EnumType("NEM2AccountRestrictionFlags", (1, 2, 4, 16385, 16388, 32769, 32770, 32772, 49153, 49156)), 0),
+            1: ('restriction_type', p.EnumType("NEM2AccountRestrictionFlags", (1, 2, 4, 16385, 16388, 32769, 32770, 32772, 49153, 49156)), None),
             2: ('restriction_additions', p.EnumType("NEM2EntityType", (0, 16724, 16717, 16973, 16718, 16974, 16961, 16705, 17220, 16964, 16708, 17230, 16712, 16722, 16978, 16725, 16720, 16976, 17232, 16716, 16721, 16977)), p.FLAG_REPEATED),
             3: ('restriction_deletions', p.EnumType("NEM2EntityType", (0, 16724, 16717, 16973, 16718, 16974, 16961, 16705, 17220, 16964, 16708, 17230, 16712, 16722, 16978, 16725, 16720, 16976, 17232, 16716, 16721, 16977)), p.FLAG_REPEATED),
         }

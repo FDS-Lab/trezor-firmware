@@ -4,7 +4,7 @@ from .. import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -14,8 +14,9 @@ class NEM2Address(p.MessageType):
 
     def __init__(
         self,
-        address: str = None,
-        network_type: int = None,
+        *,
+        address: Optional[str] = None,
+        network_type: Optional[int] = None,
     ) -> None:
         self.address = address
         self.network_type = network_type
@@ -23,6 +24,6 @@ class NEM2Address(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('address', p.UnicodeType, 0),
-            2: ('network_type', p.UVarintType, 0),
+            1: ('address', p.UnicodeType, None),
+            2: ('network_type', p.UVarintType, None),
         }

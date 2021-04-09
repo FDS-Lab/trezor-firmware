@@ -4,7 +4,7 @@ import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -15,9 +15,10 @@ class NEM2SignedTx(p.MessageType):
 
     def __init__(
         self,
-        payload: bytes = None,
-        hash: bytes = None,
-        signature: bytes = None,
+        *,
+        payload: Optional[bytes] = None,
+        hash: Optional[bytes] = None,
+        signature: Optional[bytes] = None,
     ) -> None:
         self.payload = payload
         self.hash = hash
@@ -26,7 +27,7 @@ class NEM2SignedTx(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('payload', p.BytesType, 0),
-            2: ('hash', p.BytesType, 0),
-            3: ('signature', p.BytesType, 0),
+            1: ('payload', p.BytesType, None),
+            2: ('hash', p.BytesType, None),
+            3: ('signature', p.BytesType, None),
         }

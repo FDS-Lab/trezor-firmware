@@ -4,7 +4,7 @@ from .. import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -14,8 +14,9 @@ class NEM2Mosaic(p.MessageType):
 
     def __init__(
         self,
-        id: str = None,
-        amount: str = None,
+        *,
+        id: Optional[str] = None,
+        amount: Optional[str] = None,
     ) -> None:
         self.id = id
         self.amount = amount
@@ -23,6 +24,6 @@ class NEM2Mosaic(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('id', p.UnicodeType, 0),
-            2: ('amount', p.UnicodeType, 0),
+            1: ('id', p.UnicodeType, None),
+            2: ('amount', p.UnicodeType, None),
         }

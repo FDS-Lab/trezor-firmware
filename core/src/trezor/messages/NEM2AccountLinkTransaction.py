@@ -4,7 +4,7 @@ import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -14,8 +14,9 @@ class NEM2AccountLinkTransaction(p.MessageType):
 
     def __init__(
         self,
-        remote_public_key: str = None,
-        link_action: int = None,
+        *,
+        remote_public_key: Optional[str] = None,
+        link_action: Optional[int] = None,
     ) -> None:
         self.remote_public_key = remote_public_key
         self.link_action = link_action
@@ -23,6 +24,6 @@ class NEM2AccountLinkTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('remote_public_key', p.UnicodeType, 0),
-            2: ('link_action', p.UVarintType, 0),
+            1: ('remote_public_key', p.UnicodeType, None),
+            2: ('link_action', p.UVarintType, None),
         }

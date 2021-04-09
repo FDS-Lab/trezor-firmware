@@ -4,7 +4,7 @@ import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
         EnumTypeNEM2AliasAction = Literal[0, 1]
     except ImportError:
@@ -15,9 +15,10 @@ class NEM2MosaicAliasTransaction(p.MessageType):
 
     def __init__(
         self,
-        alias_action: EnumTypeNEM2AliasAction = None,
-        namespace_id: str = None,
-        mosaic_id: str = None,
+        *,
+        alias_action: EnumTypeNEM2AliasAction = 1,
+        namespace_id: Optional[str] = None,
+        mosaic_id: Optional[str] = None,
     ) -> None:
         self.alias_action = alias_action
         self.namespace_id = namespace_id
@@ -26,7 +27,7 @@ class NEM2MosaicAliasTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('alias_action', p.EnumType("NEM2AliasAction", (1, 0)), 0),  # default=LINK
-            2: ('namespace_id', p.UnicodeType, 0),
-            3: ('mosaic_id', p.UnicodeType, 0),
+            1: ('alias_action', p.EnumType("NEM2AliasAction", (1, 0)), 1),  # default=LINK
+            2: ('namespace_id', p.UnicodeType, None),
+            3: ('mosaic_id', p.UnicodeType, None),
         }

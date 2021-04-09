@@ -6,7 +6,7 @@ from .NEM2Mosaic import NEM2Mosaic
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -16,9 +16,10 @@ class NEM2HashLockTransaction(p.MessageType):
 
     def __init__(
         self,
-        mosaic: NEM2Mosaic = None,
-        duration: int = None,
-        hash: str = None,
+        *,
+        mosaic: Optional[NEM2Mosaic] = None,
+        duration: Optional[int] = None,
+        hash: Optional[str] = None,
     ) -> None:
         self.mosaic = mosaic
         self.duration = duration
@@ -27,7 +28,7 @@ class NEM2HashLockTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('mosaic', NEM2Mosaic, 0),
-            2: ('duration', p.UVarintType, 0),
-            3: ('hash', p.UnicodeType, 0),
+            1: ('mosaic', NEM2Mosaic, None),
+            2: ('duration', p.UVarintType, None),
+            3: ('hash', p.UnicodeType, None),
         }

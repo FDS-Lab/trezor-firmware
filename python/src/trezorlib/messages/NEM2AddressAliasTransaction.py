@@ -6,7 +6,7 @@ from .NEM2Address import NEM2Address
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
         EnumTypeNEM2AliasAction = Literal[0, 1]
     except ImportError:
@@ -17,9 +17,10 @@ class NEM2AddressAliasTransaction(p.MessageType):
 
     def __init__(
         self,
-        namespace_id: str = None,
-        address: NEM2Address = None,
-        alias_action: EnumTypeNEM2AliasAction = None,
+        *,
+        namespace_id: Optional[str] = None,
+        address: Optional[NEM2Address] = None,
+        alias_action: EnumTypeNEM2AliasAction = 1,
     ) -> None:
         self.namespace_id = namespace_id
         self.address = address
@@ -28,7 +29,7 @@ class NEM2AddressAliasTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('namespace_id', p.UnicodeType, 0),
-            2: ('address', NEM2Address, 0),
-            3: ('alias_action', p.EnumType("NEM2AliasAction", (1, 0)), 0),  # default=LINK
+            1: ('namespace_id', p.UnicodeType, None),
+            2: ('address', NEM2Address, None),
+            3: ('alias_action', p.EnumType("NEM2AliasAction", (1, 0)), 1),  # default=LINK
         }

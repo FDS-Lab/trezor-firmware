@@ -4,7 +4,7 @@ import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -14,8 +14,9 @@ class NEM2TransferMessage(p.MessageType):
 
     def __init__(
         self,
-        payload: str = None,
-        type: int = None,
+        *,
+        payload: Optional[str] = None,
+        type: Optional[int] = None,
     ) -> None:
         self.payload = payload
         self.type = type
@@ -23,6 +24,6 @@ class NEM2TransferMessage(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('payload', p.UnicodeType, 0),
-            2: ('type', p.UVarintType, 0),
+            1: ('payload', p.UnicodeType, None),
+            2: ('type', p.UVarintType, None),
         }

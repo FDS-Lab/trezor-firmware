@@ -26,7 +26,7 @@ from .NEM2TransferTransaction import NEM2TransferTransaction
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -37,37 +37,38 @@ class NEM2SignTx(p.MessageType):
 
     def __init__(
         self,
-        transaction: NEM2TransactionCommon = None,
-        multisig: NEM2TransactionCommon = None,
-        transfer: NEM2TransferTransaction = None,
-        generation_hash: str = None,
-        address_n: List[int] = None,
-        cosigning: str = None,
-        mosaic_definition: NEM2MosaicDefinitionTransaction = None,
-        mosaic_supply: NEM2MosaicSupplyChangeTransaction = None,
-        namespace_registration: NEM2NamespaceRegistrationTransaction = None,
-        address_alias: NEM2AddressAliasTransaction = None,
-        aggregate: NEM2AggregateTransaction = None,
-        namespace_metadata: NEM2NamespaceMetadataTransaction = None,
-        mosaic_metadata: NEM2MosaicMetadataTransaction = None,
-        account_metadata: NEM2AccountMetadataTransaction = None,
-        mosaic_alias: NEM2MosaicAliasTransaction = None,
-        hash_lock: NEM2HashLockTransaction = None,
-        secret_lock: NEM2SecretLockTransaction = None,
-        secret_proof: NEM2SecretProofTransaction = None,
-        multisig_modification: NEM2MultisigModificationTransaction = None,
-        account_address_restriction: NEM2AccountAddressRestrictionTransaction = None,
-        account_mosaic_restriction: NEM2AccountMosaicRestrictionTransaction = None,
-        account_operation_restriction: NEM2AccountOperationRestrictionTransaction = None,
-        account_link: NEM2AccountLinkTransaction = None,
-        mosaic_global_restriction: NEM2MosaicGlobalRestrictionTransaction = None,
-        mosaic_address_restriction: NEM2MosaicAddressRestrictionTransaction = None,
+        *,
+        address_n: Optional[List[int]] = None,
+        transaction: Optional[NEM2TransactionCommon] = None,
+        multisig: Optional[NEM2TransactionCommon] = None,
+        transfer: Optional[NEM2TransferTransaction] = None,
+        generation_hash: Optional[str] = None,
+        cosigning: Optional[str] = None,
+        mosaic_definition: Optional[NEM2MosaicDefinitionTransaction] = None,
+        mosaic_supply: Optional[NEM2MosaicSupplyChangeTransaction] = None,
+        namespace_registration: Optional[NEM2NamespaceRegistrationTransaction] = None,
+        address_alias: Optional[NEM2AddressAliasTransaction] = None,
+        aggregate: Optional[NEM2AggregateTransaction] = None,
+        namespace_metadata: Optional[NEM2NamespaceMetadataTransaction] = None,
+        mosaic_metadata: Optional[NEM2MosaicMetadataTransaction] = None,
+        account_metadata: Optional[NEM2AccountMetadataTransaction] = None,
+        mosaic_alias: Optional[NEM2MosaicAliasTransaction] = None,
+        hash_lock: Optional[NEM2HashLockTransaction] = None,
+        secret_lock: Optional[NEM2SecretLockTransaction] = None,
+        secret_proof: Optional[NEM2SecretProofTransaction] = None,
+        multisig_modification: Optional[NEM2MultisigModificationTransaction] = None,
+        account_address_restriction: Optional[NEM2AccountAddressRestrictionTransaction] = None,
+        account_mosaic_restriction: Optional[NEM2AccountMosaicRestrictionTransaction] = None,
+        account_operation_restriction: Optional[NEM2AccountOperationRestrictionTransaction] = None,
+        account_link: Optional[NEM2AccountLinkTransaction] = None,
+        mosaic_global_restriction: Optional[NEM2MosaicGlobalRestrictionTransaction] = None,
+        mosaic_address_restriction: Optional[NEM2MosaicAddressRestrictionTransaction] = None,
     ) -> None:
+        self.address_n = address_n if address_n is not None else []
         self.transaction = transaction
         self.multisig = multisig
         self.transfer = transfer
         self.generation_hash = generation_hash
-        self.address_n = address_n if address_n is not None else []
         self.cosigning = cosigning
         self.mosaic_definition = mosaic_definition
         self.mosaic_supply = mosaic_supply
@@ -92,29 +93,29 @@ class NEM2SignTx(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('transaction', NEM2TransactionCommon, 0),
-            2: ('multisig', NEM2TransactionCommon, 0),
-            3: ('transfer', NEM2TransferTransaction, 0),
-            4: ('generation_hash', p.UnicodeType, 0),
+            1: ('transaction', NEM2TransactionCommon, None),
+            2: ('multisig', NEM2TransactionCommon, None),
+            3: ('transfer', NEM2TransferTransaction, None),
+            4: ('generation_hash', p.UnicodeType, None),
             5: ('address_n', p.UVarintType, p.FLAG_REPEATED),
-            6: ('cosigning', p.UnicodeType, 0),
-            7: ('mosaic_definition', NEM2MosaicDefinitionTransaction, 0),
-            8: ('mosaic_supply', NEM2MosaicSupplyChangeTransaction, 0),
-            9: ('namespace_registration', NEM2NamespaceRegistrationTransaction, 0),
-            10: ('address_alias', NEM2AddressAliasTransaction, 0),
-            11: ('aggregate', NEM2AggregateTransaction, 0),
-            12: ('namespace_metadata', NEM2NamespaceMetadataTransaction, 0),
-            13: ('mosaic_metadata', NEM2MosaicMetadataTransaction, 0),
-            14: ('account_metadata', NEM2AccountMetadataTransaction, 0),
-            15: ('mosaic_alias', NEM2MosaicAliasTransaction, 0),
-            16: ('hash_lock', NEM2HashLockTransaction, 0),
-            17: ('secret_lock', NEM2SecretLockTransaction, 0),
-            18: ('secret_proof', NEM2SecretProofTransaction, 0),
-            19: ('multisig_modification', NEM2MultisigModificationTransaction, 0),
-            21: ('account_address_restriction', NEM2AccountAddressRestrictionTransaction, 0),
-            22: ('account_mosaic_restriction', NEM2AccountMosaicRestrictionTransaction, 0),
-            23: ('account_operation_restriction', NEM2AccountOperationRestrictionTransaction, 0),
-            24: ('account_link', NEM2AccountLinkTransaction, 0),
-            25: ('mosaic_global_restriction', NEM2MosaicGlobalRestrictionTransaction, 0),
-            26: ('mosaic_address_restriction', NEM2MosaicAddressRestrictionTransaction, 0),
+            6: ('cosigning', p.UnicodeType, None),
+            7: ('mosaic_definition', NEM2MosaicDefinitionTransaction, None),
+            8: ('mosaic_supply', NEM2MosaicSupplyChangeTransaction, None),
+            9: ('namespace_registration', NEM2NamespaceRegistrationTransaction, None),
+            10: ('address_alias', NEM2AddressAliasTransaction, None),
+            11: ('aggregate', NEM2AggregateTransaction, None),
+            12: ('namespace_metadata', NEM2NamespaceMetadataTransaction, None),
+            13: ('mosaic_metadata', NEM2MosaicMetadataTransaction, None),
+            14: ('account_metadata', NEM2AccountMetadataTransaction, None),
+            15: ('mosaic_alias', NEM2MosaicAliasTransaction, None),
+            16: ('hash_lock', NEM2HashLockTransaction, None),
+            17: ('secret_lock', NEM2SecretLockTransaction, None),
+            18: ('secret_proof', NEM2SecretProofTransaction, None),
+            19: ('multisig_modification', NEM2MultisigModificationTransaction, None),
+            21: ('account_address_restriction', NEM2AccountAddressRestrictionTransaction, None),
+            22: ('account_mosaic_restriction', NEM2AccountMosaicRestrictionTransaction, None),
+            23: ('account_operation_restriction', NEM2AccountOperationRestrictionTransaction, None),
+            24: ('account_link', NEM2AccountLinkTransaction, None),
+            25: ('mosaic_global_restriction', NEM2MosaicGlobalRestrictionTransaction, None),
+            26: ('mosaic_address_restriction', NEM2MosaicAddressRestrictionTransaction, None),
         }

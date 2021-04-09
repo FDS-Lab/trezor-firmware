@@ -4,7 +4,7 @@ from .. import protobuf as p
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
         EnumTypeNEM2MosaicSupplyChangeAction = Literal[0, 1]
     except ImportError:
@@ -15,9 +15,10 @@ class NEM2MosaicSupplyChangeTransaction(p.MessageType):
 
     def __init__(
         self,
-        mosaic_id: str = None,
-        action: EnumTypeNEM2MosaicSupplyChangeAction = None,
-        delta: int = None,
+        *,
+        mosaic_id: Optional[str] = None,
+        action: EnumTypeNEM2MosaicSupplyChangeAction = 1,
+        delta: Optional[int] = None,
     ) -> None:
         self.mosaic_id = mosaic_id
         self.action = action
@@ -26,7 +27,7 @@ class NEM2MosaicSupplyChangeTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('mosaic_id', p.UnicodeType, 0),
-            2: ('action', p.EnumType("NEM2MosaicSupplyChangeAction", (1, 0)), 0),  # default=INCREASE
-            3: ('delta', p.UVarintType, 0),
+            1: ('mosaic_id', p.UnicodeType, None),
+            2: ('action', p.EnumType("NEM2MosaicSupplyChangeAction", (1, 0)), 1),  # default=INCREASE
+            3: ('delta', p.UVarintType, None),
         }

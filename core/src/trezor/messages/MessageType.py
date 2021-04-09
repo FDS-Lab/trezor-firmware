@@ -209,3 +209,12 @@ if not utils.BITCOIN_ONLY:
     WebAuthnCredentials: Literal[801] = 801
     WebAuthnAddResidentCredential: Literal[802] = 802
     WebAuthnRemoveResidentCredential: Literal[803] = 803
+    NEM2GetPublicKey: Literal[804] = 804
+    NEM2PublicKey: Literal[805] = 805
+    NEM2SignTx: Literal[806] = 806
+    NEM2SignedTx: Literal[807] = 807
+    NEM2CosignatureSignedTx: Literal[808] = 808
+    NEM2EncryptMessage: Literal[809] = 809
+    NEM2EncryptedMessage: Literal[810] = 810
+    NEM2DecryptMessage: Literal[811] = 811
+    NEM2DecryptedMessage: Literal[812] = 812

@@ -6,7 +6,7 @@ from .NEM2Address import NEM2Address
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
     except ImportError:
         pass
@@ -16,11 +16,12 @@ class NEM2MosaicAddressRestrictionTransaction(p.MessageType):
 
     def __init__(
         self,
-        mosaic_id: str = None,
-        restriction_key: str = None,
-        previous_restriction_value: str = None,
-        new_restriction_value: str = None,
-        target_address: NEM2Address = None,
+        *,
+        mosaic_id: Optional[str] = None,
+        restriction_key: Optional[str] = None,
+        previous_restriction_value: Optional[str] = None,
+        new_restriction_value: Optional[str] = None,
+        target_address: Optional[NEM2Address] = None,
     ) -> None:
         self.mosaic_id = mosaic_id
         self.restriction_key = restriction_key
@@ -31,9 +32,9 @@ class NEM2MosaicAddressRestrictionTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('mosaic_id', p.UnicodeType, 0),
-            2: ('restriction_key', p.UnicodeType, 0),
-            3: ('previous_restriction_value', p.UnicodeType, 0),
-            4: ('new_restriction_value', p.UnicodeType, 0),
-            5: ('target_address', NEM2Address, 0),
+            1: ('mosaic_id', p.UnicodeType, None),
+            2: ('restriction_key', p.UnicodeType, None),
+            3: ('previous_restriction_value', p.UnicodeType, None),
+            4: ('new_restriction_value', p.UnicodeType, None),
+            5: ('target_address', NEM2Address, None),
         }

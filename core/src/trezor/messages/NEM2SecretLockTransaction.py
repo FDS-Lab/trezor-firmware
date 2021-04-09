@@ -7,7 +7,7 @@ from .NEM2Mosaic import NEM2Mosaic
 
 if __debug__:
     try:
-        from typing import Dict, List  # noqa: F401
+        from typing import Dict, List, Optional  # noqa: F401
         from typing_extensions import Literal  # noqa: F401
         EnumTypeNEM2LockHashAlgorithm = Literal[0, 1, 2, 3]
     except ImportError:
@@ -18,11 +18,12 @@ class NEM2SecretLockTransaction(p.MessageType):
 
     def __init__(
         self,
-        secret: str = None,
-        mosaic: NEM2Mosaic = None,
-        duration: int = None,
-        hash_algorithm: EnumTypeNEM2LockHashAlgorithm = None,
-        recipient_address: NEM2Address = None,
+        *,
+        secret: Optional[str] = None,
+        mosaic: Optional[NEM2Mosaic] = None,
+        duration: Optional[int] = None,
+        hash_algorithm: EnumTypeNEM2LockHashAlgorithm = 0,
+        recipient_address: Optional[NEM2Address] = None,
     ) -> None:
         self.secret = secret
         self.mosaic = mosaic
@@ -33,9 +34,9 @@ class NEM2SecretLockTransaction(p.MessageType):
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('secret', p.UnicodeType, 0),
-            2: ('mosaic', NEM2Mosaic, 0),
-            3: ('duration', p.UVarintType, 0),
+            1: ('secret', p.UnicodeType, None),
+            2: ('mosaic', NEM2Mosaic, None),
+            3: ('duration', p.UVarintType, None),
             4: ('hash_algorithm', p.EnumType("NEM2LockHashAlgorithm", (0, 1, 2, 3)), 0),  # default=SHA3_256
-            5: ('recipient_address', NEM2Address, 0),
+            5: ('recipient_address', NEM2Address, None),
         }
