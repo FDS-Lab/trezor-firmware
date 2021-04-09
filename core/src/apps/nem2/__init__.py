@@ -1,13 +1,17 @@
 from trezor import wire
 from trezor.messages import MessageType
 
-from apps.common import HARDENED
+from apps.common.paths import PATTERN_SEP5
 
-CURVE = "ed25519-keccak"
+CURVE = "ed25519"
+SLIP44_ID = 4343
+PATTERNS = (
+    PATTERN_SEP5,
+    "m/44'/coin_type'/0'/account'",  # Ledger compatibility
+)
 
 def boot() -> None:
-    ns = [[CURVE, HARDENED | 44, HARDENED | 43], [CURVE, HARDENED | 44, HARDENED | 1]]
-    wire.add(MessageType.NEM2GetPublicKey, __name__, "get_public_key", ns)
-    wire.add(MessageType.NEM2SignTx, __name__, "sign_tx", ns)
-    wire.add(MessageType.NEM2EncryptMessage, __name__, "encrypt_message", ns)
-    wire.add(MessageType.NEM2DecryptMessage, __name__, "decrypt_message", ns)
+    wire.add(MessageType.NEM2GetPublicKey, __name__, "get_public_key")
+    wire.add(MessageType.NEM2SignTx, __name__, "sign_tx")
+    wire.add(MessageType.NEM2EncryptMessage, __name__, "encrypt_message")
+    wire.add(MessageType.NEM2DecryptMessage, __name__, "decrypt_message")
