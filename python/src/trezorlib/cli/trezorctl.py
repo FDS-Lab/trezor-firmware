@@ -43,6 +43,7 @@ from . import (
     lisk,
     monero,
     nem,
+    nem2,
     ripple,
     settings,
     stellar,
@@ -334,6 +335,7 @@ cli.add_command(fido.cli)
 cli.add_command(lisk.cli)
 cli.add_command(monero.cli)
 cli.add_command(nem.cli)
+cli.add_command(nem2.cli)
 cli.add_command(ripple.cli)
 cli.add_command(settings.cli)
 cli.add_command(stellar.cli)
