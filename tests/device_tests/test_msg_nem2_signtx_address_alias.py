@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxAddressAlias:
@@ -40,9 +41,9 @@ class TestMsgNEM2SignTxAddressAlias:
                 "namespaceId": "EAA4CB0862DBCB67",
                 "address": {
                     "address": "TDUIDV5CRFYLZMOEVJBGPHEIRVJFAADIDY2HPTOS",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
-                }
-            }
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
+                },
+            },
         )
 
         assert (
@@ -71,9 +72,9 @@ class TestMsgNEM2SignTxAddressAlias:
                 "namespaceId": "EAA4CB0862DBCB67",
                 "address": {
                     "address": "TDUIDV5CRFYLZMOEVJBGPHEIRVJFAADIDY2HPTOS",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
-                }
-            }
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
+                },
+            },
         )
 
         assert (

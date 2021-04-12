@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxMosaicAddressRestriction:
@@ -42,7 +43,7 @@ class TestMsgNEM2SignTxMosaicAddressRestriction:
                 "newRestrictionValue": "2",
                 "targetAddress": {
                     "address": "TCOYOMZ3LEF6ZCHCNKEWLVTYCLSPUBSBTTAM6F2D",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
                 },
             },
         )

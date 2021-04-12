@@ -10,6 +10,7 @@ PATTERNS = (
     "m/44'/coin_type'/0'/account'",  # Ledger compatibility
 )
 
+
 def boot() -> None:
     wire.add(MessageType.NEM2GetPublicKey, __name__, "get_public_key")
     wire.add(MessageType.NEM2SignTx, __name__, "sign_tx")

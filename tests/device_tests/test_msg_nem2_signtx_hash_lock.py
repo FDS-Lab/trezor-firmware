@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxHashLock:
@@ -87,12 +88,9 @@ class TestMsgNEM2SignTxHashLock:
                 "version": 38913,
                 "maxFee": "0",
                 "deadline": "113728610090",
-                "mosaic": {
-                    "amount": "10000000",
-                    "id": "85BBEA6CC462B244"
-                },
+                "mosaic": {"amount": "10000000", "id": "85BBEA6CC462B244"},
                 "duration": "480",
-                "hash": "6B819F85494A366D2034B55398C4EC087CA9B33771DEC685980A233E09FF2950"
+                "hash": "6B819F85494A366D2034B55398C4EC087CA9B33771DEC685980A233E09FF2950",
             },
         )
 

@@ -2,7 +2,7 @@ from micropython import const
 
 from apps.common import HARDENED
 
-CURVE=""
+CURVE = ""
 
 NEM2_NETWORK_MAIN_NET = const(0x68)
 NEM2_NETWORK_TEST_NET = const(0x98)
@@ -87,8 +87,9 @@ map_type_to_friendly_name = {
     NEM2_TRANSACTION_TYPE_ACCOUNT_METADATA: "account metadata",
     NEM2_TRANSACTION_TYPE_HASH_LOCK: "hash lock",
     NEM2_TRANSACTION_TYPE_SECRET_LOCK: "secret lock",
-    NEM2_TRANSACTION_TYPE_SECRET_PROOF: "secret proof"
+    NEM2_TRANSACTION_TYPE_SECRET_PROOF: "secret proof",
 }
+
 
 def validate_nem2_path(path: list) -> bool:
     """
@@ -100,13 +101,11 @@ def validate_nem2_path(path: list) -> bool:
         return False
     if path[0] != 44 | HARDENED:
         return False
-    if not (
-        path[1] == 43 | HARDENED
-    ):
+    if not (path[1] == 43 | HARDENED):
         return False
     if path[2] < HARDENED or path[2] > 1000000 | HARDENED:
         return False
-    if (path[3] != 0 | HARDENED or path[4] != 0 | HARDENED):
+    if path[3] != 0 | HARDENED or path[4] != 0 | HARDENED:
         return False
     return True
 
@@ -116,12 +115,13 @@ def captialize_string(s):
     s[0] = s[0].upper()
     return "".join(s)
 
+
 # the smallest protobuf integer size is 32 bits
 # nem2 catapult uses a signed 8 bit integer for minApprovalDelta and minRemovalDelta
 # this function is used to convert between the signed 8 bit integers sent by the sdk
 # to the uint32 data type as defined in the protobuf message
 def unsigned_32_bit_int_to_8_bit(unsigned_32_bit_int, signed=False):
-    unsigned_8_bit_int = unsigned_32_bit_int & 0x000000ff
-    if(signed and unsigned_8_bit_int > 127):
+    unsigned_8_bit_int = unsigned_32_bit_int & 0x000000FF
+    if signed and unsigned_8_bit_int > 127:
         return unsigned_8_bit_int - 256
     return unsigned_8_bit_int

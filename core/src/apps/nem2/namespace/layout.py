@@ -1,31 +1,32 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
-from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
-from trezor.messages.NEM2NamespaceRegistrationTransaction import NEM2NamespaceRegistrationTransaction
 from trezor.messages.NEM2AddressAliasTransaction import NEM2AddressAliasTransaction
+from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
 from trezor.messages.NEM2MosaicAliasTransaction import NEM2MosaicAliasTransaction
-
-from trezor.ui.text import Text
-from trezor.ui.scroll import Paginated
-
-from ..helpers import (
-    NEM2_NAMESPACE_REGISTRATION_TYPE_ROOT,
-    NEM2_NAMESPACE_REGISTRATION_TYPE_SUB,
-    NEM2_ALIAS_ACTION_TYPE_LINK,
-    NEM2_ALIAS_ACTION_TYPE_UNLINK,
+from trezor.messages.NEM2NamespaceRegistrationTransaction import (
+    NEM2NamespaceRegistrationTransaction,
 )
-from ..layout import require_confirm_final
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
+from trezor.ui.scroll import Paginated
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..helpers import (
+    NEM2_ALIAS_ACTION_TYPE_LINK,
+    NEM2_ALIAS_ACTION_TYPE_UNLINK,
+    NEM2_NAMESPACE_REGISTRATION_TYPE_ROOT,
+    NEM2_NAMESPACE_REGISTRATION_TYPE_SUB,
+)
+from ..layout import require_confirm_final
+
 
 async def ask_namespace_registration(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     namespace_registration: NEM2NamespaceRegistrationTransaction,
-    embedded=False
+    embedded=False,
 ):
     properties = []
     # confirm name and id
@@ -42,12 +43,17 @@ async def ask_namespace_registration(
     t = Text("Confirm properties", ui.ICON_SEND, new_lines=False)
     t.bold("Registration Type:")
     t.br()
-    if(namespace_registration.registration_type == NEM2_NAMESPACE_REGISTRATION_TYPE_ROOT):
+    if (
+        namespace_registration.registration_type
+        == NEM2_NAMESPACE_REGISTRATION_TYPE_ROOT
+    ):
         t.normal("Root Namespace")
         t.bold("Duration:")
         t.br()
         t.normal(namespace_registration.duration)
-    elif (namespace_registration.registration_type == NEM2_NAMESPACE_REGISTRATION_TYPE_SUB):
+    elif (
+        namespace_registration.registration_type == NEM2_NAMESPACE_REGISTRATION_TYPE_SUB
+    ):
         t.normal("Sub Namespace")
         t.bold("Parent Id:")
         t.br()
@@ -60,11 +66,12 @@ async def ask_namespace_registration(
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
+
 async def ask_address_alias(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     address_alias: NEM2NamespaceRegistrationTransaction,
-    embedded=False
+    embedded=False,
 ):
     properties = []
     # confirm namespace id
@@ -74,9 +81,9 @@ async def ask_address_alias(
     t.normal(address_alias.namespace_id.upper())
     t.bold("Alias Action:")
     t.br()
-    if(address_alias.alias_action == NEM2_ALIAS_ACTION_TYPE_LINK):
+    if address_alias.alias_action == NEM2_ALIAS_ACTION_TYPE_LINK:
         t.normal("LINK")
-    elif (address_alias.alias_action == NEM2_ALIAS_ACTION_TYPE_UNLINK):
+    elif address_alias.alias_action == NEM2_ALIAS_ACTION_TYPE_UNLINK:
         t.normal("UNLINK")
 
     properties.append(t)
@@ -95,11 +102,12 @@ async def ask_address_alias(
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
+
 async def ask_mosaic_alias(
     ctx,
     common: NEM2TransactionCommon,
     mosaic_alias: NEM2NamespaceRegistrationTransaction,
-    embedded=False
+    embedded=False,
 ):
     properties = []
 
@@ -127,7 +135,7 @@ async def ask_mosaic_alias(
         t = Text("Confirm properties", ui.ICON_SEND, new_lines=False)
         t.bold("Alias Action:")
         t.br()
-        t.normal('{} ({})'.format(alias_text, mosaic_alias.alias_action))
+        t.normal("{} ({})".format(alias_text, mosaic_alias.alias_action))
         properties.append(t)
 
     paginated = Paginated(properties)

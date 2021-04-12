@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxNamespaceMetadata:
@@ -39,10 +40,10 @@ class TestMsgNEM2SignTxNamespaceMetadata:
                 "minApprovalDelta": 1,
                 "minRemovalDelta": 1,
                 "publicKeyAdditions": [
-                "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297"
+                    "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297"
                 ],
-                "publicKeyDeletions": []
-            }
+                "publicKeyDeletions": [],
+            },
         )
 
         assert (
@@ -72,8 +73,8 @@ class TestMsgNEM2SignTxNamespaceMetadata:
                 "publicKeyAdditions": [],
                 "publicKeyDeletions": [
                     "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297"
-                ]
-            }
+                ],
+            },
         )
 
         assert (
@@ -103,8 +104,8 @@ class TestMsgNEM2SignTxNamespaceMetadata:
                 "publicKeyAdditions": [],
                 "publicKeyDeletions": [
                     "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297"
-                ]
-            }
+                ],
+            },
         )
 
         assert (

@@ -1,28 +1,29 @@
+from ubinascii import unhexlify
+
 from trezor import ui
 from trezor.messages import (
     ButtonRequestType,
-    NEM2Mosaic,
-    NEM2TransactionCommon,
     NEM2EmbeddedTransactionCommon,
+    NEM2Mosaic,
     NEM2MultisigModificationTransaction,
+    NEM2TransactionCommon,
 )
-from trezor.ui.text import Text
 from trezor.strings import format_amount
 from trezor.ui.scroll import Paginated
-from ubinascii import unhexlify
-
-from ..layout import require_confirm_final, require_confirm_text
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
-
 from apps.nem2.helpers import unsigned_32_bit_int_to_8_bit
+
+from ..layout import require_confirm_final, require_confirm_text
+
 
 async def ask_multisig_modification(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     multisig_modification: NEM2MultisigModificationTransaction,
-    embedded=False
+    embedded=False,
 ):
 
     properties = []
@@ -31,11 +32,23 @@ async def ask_multisig_modification(
     t = Text("Confirm properties", ui.ICON_SEND, new_lines=False)
     t.bold("Approval Delta:")
     t.br()
-    t.normal(str(unsigned_32_bit_int_to_8_bit(multisig_modification.min_approval_delta, signed=True)))
+    t.normal(
+        str(
+            unsigned_32_bit_int_to_8_bit(
+                multisig_modification.min_approval_delta, signed=True
+            )
+        )
+    )
     t.br()
     t.bold("Removal Delta:")
     t.br()
-    t.normal(str(unsigned_32_bit_int_to_8_bit(multisig_modification.min_removal_delta, signed=True)))
+    t.normal(
+        str(
+            unsigned_32_bit_int_to_8_bit(
+                multisig_modification.min_removal_delta, signed=True
+            )
+        )
+    )
     properties.append(t)
 
     # confirm number of additions and deletions

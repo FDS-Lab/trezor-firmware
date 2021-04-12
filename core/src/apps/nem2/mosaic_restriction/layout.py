@@ -1,25 +1,25 @@
 from trezor import ui
 from trezor.messages import (
     ButtonRequestType,
-    NEM2TransactionCommon,
     NEM2EmbeddedTransactionCommon,
+    NEM2MosaicAddressRestrictionTransaction,
     NEM2MosaicGlobalRestrictionTransaction,
-    NEM2MosaicAddressRestrictionTransaction
+    NEM2TransactionCommon,
 )
-
-from trezor.ui.text import Text
 from trezor.ui.scroll import Paginated
-
-from ..layout import require_confirm_final, require_confirm_text
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..layout import require_confirm_final, require_confirm_text
+
 
 async def ask_global_restriction(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     global_restriction: NEM2MosaicGlobalRestrictionTransaction,
-    embedded=False
+    embedded=False,
 ):
 
     properties = []
@@ -91,7 +91,7 @@ async def ask_address_restriction(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     address_restriction: NEM2MosaicAddressRestrictionTransaction,
-    embedded=False
+    embedded=False,
 ):
 
     properties = []

@@ -21,10 +21,10 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2GetPublicKey:
-
     @pytest.mark.setup_client(mnemonic=MNEMONIC12)
     def test_nem2_encrypt_message(self, client):
 
@@ -35,7 +35,7 @@ class TestMsgNEM2GetPublicKey:
             "message with a \\s character",
             "message ending with a \r",
             "1232221232123123232333323121112112",
-            "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297"
+            "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297",
         ]
 
         for test_payload in test_payloads:
@@ -49,14 +49,12 @@ class TestMsgNEM2GetPublicKey:
             parse_path("m/44'/43'/0'/0'/0'"),
             {
                 "senderPublicKey": "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297",
-                "payload": "50E316DE03F1D52C9DB9CBA6F11F84EAC05D78FD55F3668E5FDF0733A299C27BE9F50ADD3EA02A8BE7413D072E8A2936"
-            }
+                "payload": "50E316DE03F1D52C9DB9CBA6F11F84EAC05D78FD55F3668E5FDF0733A299C27BE9F50ADD3EA02A8BE7413D072E8A2936",
+            },
         )
 
-        assert (
-            bytes("Encrypted by nem2-sdk", "ascii")
-            == decrypted_message.payload
-        )
+        assert bytes("Encrypted by nem2-sdk", "ascii") == decrypted_message.payload
+
 
 def ensure_encrypted_message_is_correct(payload, client):
     encrypted_message = nem2.encrypt_message(
@@ -64,8 +62,8 @@ def ensure_encrypted_message_is_correct(payload, client):
         parse_path("m/44'/43'/0'/0'/0'"),
         {
             "recipientPublicKey": "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297",
-            "payload": payload
-        }
+            "payload": payload,
+        },
     )
 
     decrypted_message = nem2.decrypt_message(
@@ -73,11 +71,8 @@ def ensure_encrypted_message_is_correct(payload, client):
         parse_path("m/44'/43'/0'/0'/0'"),
         {
             "senderPublicKey": "596FEAB15D98BFD75F1743E9DC8A36474A3D0C06AE78ED134C231336C38A6297",
-            "payload": encrypted_message.payload.hex()
-        }
+            "payload": encrypted_message.payload.hex(),
+        },
     )
 
-    assert (
-        bytes(payload, "ascii")
-        == decrypted_message.payload
-    )
+    assert bytes(payload, "ascii") == decrypted_message.payload

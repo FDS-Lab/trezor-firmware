@@ -1,29 +1,33 @@
-from trezor import ui
-from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
-from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
-from trezor.messages.NEM2NamespaceMetadataTransaction import NEM2NamespaceMetadataTransaction
-
-from ..helpers import (
-    NEM2_TRANSACTION_TYPE_NAMESPACE_METADATA,
-    NEM2_TRANSACTION_TYPE_MOSAIC_METADATA
-)
-
-from trezor.ui.text import Text
-from trezor.strings import format_amount
-from trezor.ui.scroll import Paginated
 from ubinascii import unhexlify
 
-from ..layout import require_confirm_final, require_confirm_text
+from trezor import ui
+from trezor.messages import ButtonRequestType
+from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
+from trezor.messages.NEM2NamespaceMetadataTransaction import (
+    NEM2NamespaceMetadataTransaction,
+)
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
+from trezor.strings import format_amount
+from trezor.ui.scroll import Paginated
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
 
+from ..helpers import (
+    NEM2_TRANSACTION_TYPE_MOSAIC_METADATA,
+    NEM2_TRANSACTION_TYPE_NAMESPACE_METADATA,
+)
+from ..layout import require_confirm_final, require_confirm_text
+
+
 async def ask_metadata(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
-    metadata: NEM2NamespaceMetadataTransaction | NEM2MosaicMetadataTransaction | NEM2AccountMetadataTransaction,
-    embedded=False
+    metadata: NEM2NamespaceMetadataTransaction
+    | NEM2MosaicMetadataTransaction
+    | NEM2AccountMetadataTransaction,
+    embedded=False,
 ):
 
     properties = []

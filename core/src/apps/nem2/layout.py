@@ -1,11 +1,11 @@
 from trezor import ui
 from trezor.messages import ButtonRequestType
-from trezor.ui.text import Text
 from trezor.strings import format_amount
-
-from .helpers import NEM2_MAX_DIVISIBILITY
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm, require_hold_to_confirm
+
+from .helpers import NEM2_MAX_DIVISIBILITY
 
 
 async def require_confirm_text(ctx, action: str):

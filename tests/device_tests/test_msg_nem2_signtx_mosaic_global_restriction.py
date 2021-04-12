@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxMosaicGlobalRestriction:
@@ -42,7 +43,7 @@ class TestMsgNEM2SignTxMosaicGlobalRestriction:
                 "previousRestrictionValue": "1",
                 "previousRestrictionType": 1,
                 "newRestrictionValue": "2",
-                "newRestrictionType": 1
+                "newRestrictionType": 1,
             },
         )
 

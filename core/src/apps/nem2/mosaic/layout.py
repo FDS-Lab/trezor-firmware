@@ -1,42 +1,45 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
-from trezor.messages.NEM2MosaicDefinitionTransaction import NEM2MosaicDefinitionTransaction
-from trezor.messages.NEM2MosaicSupplyChangeTransaction import NEM2MosaicSupplyChangeTransaction
-
+from trezor.messages.NEM2MosaicDefinitionTransaction import (
+    NEM2MosaicDefinitionTransaction,
+)
+from trezor.messages.NEM2MosaicSupplyChangeTransaction import (
+    NEM2MosaicSupplyChangeTransaction,
+)
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.ui.scroll import Paginated
 from trezor.ui.text import Text
 
+from apps.common.layout import require_confirm
+
+from ..helpers import (
+    NEM2_MOSAIC_SUPPLY_CHANGE_ACTION_DECREASE,
+    NEM2_MOSAIC_SUPPLY_CHANGE_ACTION_INCREASE,
+)
 from ..layout import (
     require_confirm_content,
     require_confirm_final,
     require_confirm_text,
 )
 
-from ..helpers import (
-    NEM2_MOSAIC_SUPPLY_CHANGE_ACTION_INCREASE,
-    NEM2_MOSAIC_SUPPLY_CHANGE_ACTION_DECREASE
-)
-
-from apps.common.layout import require_confirm
 
 async def ask_mosaic_definition(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     mosaic_definition: NEM2MosaicDefinitionTransaction,
-    embedded=False
+    embedded=False,
 ):
     await require_confirm_properties_definition(ctx, mosaic_definition)
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
+
 async def ask_mosaic_supply(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     mosaic_supply: NEM2MosaicSupplyChangeTransaction,
-    embedded=False
+    embedded=False,
 ):
     # Initial message
     msg = Text("Supply change", ui.ICON_SEND, ui.GREEN)
@@ -55,7 +58,10 @@ async def ask_mosaic_supply(
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
-async def require_confirm_properties_definition(ctx, mosaic_definition: NEM2MosaicDefinitionTransaction):
+
+async def require_confirm_properties_definition(
+    ctx, mosaic_definition: NEM2MosaicDefinitionTransaction
+):
     properties = []
     # Mosaic ID
     if mosaic_definition.mosaic_id:

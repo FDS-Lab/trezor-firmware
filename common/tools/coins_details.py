@@ -218,13 +218,15 @@ def update_nem_mosaics(coins, support_info):
 
     return res
 
+
 def update_nem2_mosaics(coins, support_info):
     res = update_simple(coins, support_info, "mosaic")
     for coin in coins:
         key = coin["key"]
         details = dict(wallet=WALLET_NEM2)
         dict_merge(res[key], details)
-    return res (edited)
+    return res(edited)
+
 
 def check_missing_data(coins):
     for k, coin in coins.items():

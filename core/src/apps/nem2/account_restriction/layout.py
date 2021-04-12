@@ -1,35 +1,39 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
-from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
-from trezor.messages.NEM2AccountAddressRestrictionTransaction import NEM2AccountAddressRestrictionTransaction
-from trezor.messages.NEM2AccountMosaicRestrictionTransaction import NEM2AccountMosaicRestrictionTransaction
-from trezor.messages.NEM2AccountOperationRestrictionTransaction import NEM2AccountOperationRestrictionTransaction
-
-from trezor.ui.text import Text
-from trezor.ui.scroll import Paginated
-
-from ..helpers import (
-    map_type_to_friendly_name,
-    NEM2_TRANSACTION_TYPE_ACCOUNT_ADDRESS_RESTRICTION,
-    NEM2_TRANSACTION_TYPE_ACCOUNT_MOSAIC_RESTRICTION,
-    NEM2_TRANSACTION_TYPE_ACCOUNT_OPERATION_RESTRICTION,
-    NEM2_ACCOUNT_RESTRICTION_ALLOW_INCOMING_ADDRESS,
-    NEM2_ACCOUNT_RESTRICTION_ALLOW_MOSAIC,
-    NEM2_ACCOUNT_RESTRICTION_ALLOW_INCOMING_TRANSACTION_TYPE,
-    NEM2_ACCOUNT_RESTRICTION_ALLOW_OUTGOING_ADDRESS,
-    NEM2_ACCOUNT_RESTRICTION_ALLOW_OUTGOING_TRANSACTION_TYPE,
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_INCOMING_ADDRESS,
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_MOSAIC,
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_INCOMING_TRANSACTION_TYPE,
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_ADDRESS,
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_TRANSACTION_TYPE,
+from trezor.messages.NEM2AccountAddressRestrictionTransaction import (
+    NEM2AccountAddressRestrictionTransaction,
 )
-from ..layout import require_confirm_final
+from trezor.messages.NEM2AccountMosaicRestrictionTransaction import (
+    NEM2AccountMosaicRestrictionTransaction,
+)
+from trezor.messages.NEM2AccountOperationRestrictionTransaction import (
+    NEM2AccountOperationRestrictionTransaction,
+)
+from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
+from trezor.ui.scroll import Paginated
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..helpers import (
+    NEM2_ACCOUNT_RESTRICTION_ALLOW_INCOMING_ADDRESS,
+    NEM2_ACCOUNT_RESTRICTION_ALLOW_INCOMING_TRANSACTION_TYPE,
+    NEM2_ACCOUNT_RESTRICTION_ALLOW_MOSAIC,
+    NEM2_ACCOUNT_RESTRICTION_ALLOW_OUTGOING_ADDRESS,
+    NEM2_ACCOUNT_RESTRICTION_ALLOW_OUTGOING_TRANSACTION_TYPE,
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_INCOMING_ADDRESS,
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_INCOMING_TRANSACTION_TYPE,
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_MOSAIC,
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_ADDRESS,
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_TRANSACTION_TYPE,
+    NEM2_TRANSACTION_TYPE_ACCOUNT_ADDRESS_RESTRICTION,
+    NEM2_TRANSACTION_TYPE_ACCOUNT_MOSAIC_RESTRICTION,
+    NEM2_TRANSACTION_TYPE_ACCOUNT_OPERATION_RESTRICTION,
+    map_type_to_friendly_name,
+)
+from ..layout import require_confirm_final
 
 enum_to_friendly_text = {
     NEM2_ACCOUNT_RESTRICTION_ALLOW_INCOMING_ADDRESS: "Allow only incoming\ntransactions from\na given address\n",
@@ -41,23 +45,27 @@ enum_to_friendly_text = {
     NEM2_ACCOUNT_RESTRICTION_BLOCK_MOSAIC: "Block incoming\ntransactions containing\na given mosaic identifier\n",
     NEM2_ACCOUNT_RESTRICTION_BLOCK_INCOMING_TRANSACTION_TYPE: "Block incoming\ntransactions with a\ngiven transaction type\n",
     NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_ADDRESS: "Block outgoing\ntransactions from a\ngiven address\n",
-    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_TRANSACTION_TYPE: "Block outgoing\ntransactions with a\ngiven transaction type\n"
+    NEM2_ACCOUNT_RESTRICTION_BLOCK_OUTGOING_TRANSACTION_TYPE: "Block outgoing\ntransactions with a\ngiven transaction type\n",
 }
+
 
 async def ask_account_restriction(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
-    account_restriction: NEM2AccountAddressRestrictionTransaction | NEM2AccountMosaicRestrictionTransaction | NEM2AccountOperationRestrictionTransaction,
-    embedded=False
+    account_restriction: NEM2AccountAddressRestrictionTransaction
+    | NEM2AccountMosaicRestrictionTransaction
+    | NEM2AccountOperationRestrictionTransaction,
+    embedded=False,
 ):
-    await require_confirm_properties_account_restriction(ctx, account_restriction, common.type)
+    await require_confirm_properties_account_restriction(
+        ctx, account_restriction, common.type
+    )
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
+
 async def require_confirm_properties_account_restriction(
-    ctx,
-    account_restriction: NEM2AccountAddressRestrictionTransaction,
-    entity_type: int
+    ctx, account_restriction: NEM2AccountAddressRestrictionTransaction, entity_type: int
 ):
     properties = []
 
@@ -72,11 +80,16 @@ async def require_confirm_properties_account_restriction(
         # Used to avoid the automatic text overflow that adds hyphens mid word
         text_lines = friendly_text.split("\n")
         for i, text in enumerate(text_lines):
-            if i == len(text_lines) - 1: # Only do this if its the last line of text
-                t.normal('{}{}(code: {})'.format(
-                    text,
-                    " " if text else "", # Only put a space before "(code)" if there is text before it
-                    restriction_type))
+            if i == len(text_lines) - 1:  # Only do this if its the last line of text
+                t.normal(
+                    "{}{}(code: {})".format(
+                        text,
+                        " "
+                        if text
+                        else "",  # Only put a space before "(code)" if there is text before it
+                        restriction_type,
+                    )
+                )
             else:
                 t.normal(text)
 

@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxTransfer:
@@ -38,19 +39,11 @@ class TestMsgNEM2SignTxTransfer:
                 "deadline": "113248176649",
                 "recipientAddress": {
                     "address": "TAO6QEUC3APBTMDAETMG6IZJI7YOXWHLGC5T4HA4",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
                 },
-                "mosaics": [
-                    {
-                        "amount": "1000000000",
-                        "id": "308F144790CD7BC4"
-                    }
-                ],
-                "message": {
-                    "type": 0,
-                    "payload": "Test Transfer"
-                }
-            }
+                "mosaics": [{"amount": "1000000000", "id": "308F144790CD7BC4"}],
+                "message": {"type": 0, "payload": "Test Transfer"},
+            },
         )
 
         assert (
@@ -76,19 +69,14 @@ class TestMsgNEM2SignTxTransfer:
                 "deadline": "113248176649",
                 "recipientAddress": {
                     "address": "TB6YHDGPYV3TGEFE7Z3BH2EXJZNVJJTH3EWL76PD",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
                 },
-                "mosaics": [
-                    {
-                        "amount": "1000000000",
-                        "id": "85BBEA6CC462B244"
-                    }
-                ],
+                "mosaics": [{"amount": "1000000000", "id": "85BBEA6CC462B244"}],
                 "message": {
                     "type": 1,
-                    "payload": "9FB270F6EF609FD70B469F4139B0456ACE22A081B68B01106F4D08C756B7F7A7D84C470AADA2361D7BF3732D47E7973490FC4EC97511C5EA20A2F590795736A2"
-                }
-            }
+                    "payload": "9FB270F6EF609FD70B469F4139B0456ACE22A081B68B01106F4D08C756B7F7A7D84C470AADA2361D7BF3732D47E7973490FC4EC97511C5EA20A2F590795736A2",
+                },
+            },
         )
 
         assert (

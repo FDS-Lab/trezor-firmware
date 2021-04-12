@@ -1,21 +1,19 @@
+from ubinascii import unhexlify
+
 from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 
 from apps.common.writers import (
     write_bytes,
+    write_uint8,
     write_uint16_le,
-    write_uint32_le,
     write_uint32_be,
+    write_uint32_le,
     write_uint64_le,
-    write_uint8
 )
 
-from ubinascii import unhexlify
 
 # https://github.com/nemtech/nem2-sdk-typescript-javascript/blob/master/src/infrastructure/catbuffer/TransactionBuilder.ts#L167
-def serialize_tx_common(
-    w: bytearray,
-    common: NEM2TransactionCommon
-) -> bytearray:
+def serialize_tx_common(w: bytearray, common: NEM2TransactionCommon) -> bytearray:
     # we don't write the size in here as it changes depending on the transaction type
     # by the time this runs, we assume that size has already been written to the provided bytearray
 
@@ -66,10 +64,10 @@ def serialize_tx_common(
 
     return w
 
+
 # https://github.com/nemtech/nem2-sdk-typescript-javascript/blob/master/src/infrastructure/catbuffer/TransactionBuilder.ts#L167
 def serialize_embedded_tx_common(
-    w: bytearray,
-    common: NEM2EmbeddedTransactionCommon
+    w: bytearray, common: NEM2EmbeddedTransactionCommon
 ) -> bytearray:
     # We don't write the size in here as it changes depending on the transaction type
     # by the time this runs, we assume that size has already been written to the provided bytearray
@@ -99,31 +97,33 @@ def serialize_embedded_tx_common(
 
     return w
 
+
 def get_common_message_size():
 
     # calculate the size of the common message (in bytes)
     size = 0
-    size += 4 # message size
-    size += 4 # verifiableEntityHeader
-    size += 64 # signature
-    size += 32 # signer public key
-    size += 4 # entityBody_Reserved1Bytes
-    size += 1 # version
-    size += 1 # network
-    size += 2 # type
-    size += 8 # fee
-    size += 8 # deadline
+    size += 4  # message size
+    size += 4  # verifiableEntityHeader
+    size += 64  # signature
+    size += 32  # signer public key
+    size += 4  # entityBody_Reserved1Bytes
+    size += 1  # version
+    size += 1  # network
+    size += 2  # type
+    size += 8  # fee
+    size += 8  # deadline
     return size
+
 
 def get_embedded_common_message_size():
 
     # calculate the size of the common message (in bytes)
     size = 0
-    size += 4 # message size
-    size += 4 # embeddedTransactionHeader
-    size += 32 # signer public key
-    size += 4 # entityBody_Reserved1Bytes
-    size += 1 # version
-    size += 1 # network
-    size += 2 # type
+    size += 4  # message size
+    size += 4  # embeddedTransactionHeader
+    size += 32  # signer public key
+    size += 4  # entityBody_Reserved1Bytes
+    size += 1  # version
+    size += 1  # network
+    size += 2  # type
     return size

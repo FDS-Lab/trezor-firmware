@@ -292,6 +292,7 @@ def _load_nem_mosaics():
         mosaic.update(shortcut=shortcut, key="nem:{}".format(shortcut))
     return mosaics
 
+
 def _load_nem2_mosaics():
     """Loads NEM2 mosaics from `nem2/nem2_mosaics.json`"""
     mosaics = load_json("nem2", "nem2_mosaics.json")

@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxAccountMetadata:
@@ -40,8 +41,8 @@ class TestMsgNEM2SignTxAccountMetadata:
                 "scopedMetadataKey": "0000000000000001",
                 "valueSizeDelta": 11,
                 "valueSize": 11,
-                "value": "41206E65772076616C7565"
-            }
+                "value": "41206E65772076616C7565",
+            },
         )
 
         assert (

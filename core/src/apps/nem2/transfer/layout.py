@@ -1,32 +1,29 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2TransferTransaction import NEM2TransferTransaction
-
-from trezor.ui.text import Text
-from trezor.ui.scroll import Paginated
 from trezor.strings import format_amount
-
-from ..helpers import (
-    NEM2_MAX_DIVISIBILITY,
-    NEM2_MOSAIC_AMOUNT_DIVISOR,
-    NEM2_MESSAGE_TYPE_ENCRYPTED
-)
-
-from ..layout import require_confirm_final, require_confirm_text
-from ..mosaic.helpers import get_mosaic_definition, is_nem_xem_mosaic
+from trezor.ui.scroll import Paginated
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..helpers import (
+    NEM2_MAX_DIVISIBILITY,
+    NEM2_MESSAGE_TYPE_ENCRYPTED,
+    NEM2_MOSAIC_AMOUNT_DIVISOR,
+)
+from ..layout import require_confirm_final, require_confirm_text
+from ..mosaic.helpers import get_mosaic_definition, is_nem_xem_mosaic
 
 
 async def ask_transfer(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     transfer: NEM2TransferTransaction,
-    embedded=False
+    embedded=False,
 ):
     properties = []
 
@@ -37,15 +34,23 @@ async def ask_transfer(
     properties.append(text)
 
     for mosaic in transfer.mosaics:
-        mosaic_confirmation_sections = get_mosaic_confirmation_sections(ctx, common, transfer, mosaic)
+        mosaic_confirmation_sections = get_mosaic_confirmation_sections(
+            ctx, common, transfer, mosaic
+        )
         properties += mosaic_confirmation_sections
 
-    if(transfer.message.payload):
+    if transfer.message.payload:
         text = Text("Confirm properties", ui.ICON_SEND, new_lines=False)
-        if(transfer.message.type == NEM2_MESSAGE_TYPE_ENCRYPTED):
+        if transfer.message.type == NEM2_MESSAGE_TYPE_ENCRYPTED:
             text.bold("Encrypted Message:")
             text.br()
-            text.mono(*split_address(transfer.message.payload[:20] + "..." + transfer.message.payload[-20:]))
+            text.mono(
+                *split_address(
+                    transfer.message.payload[:20]
+                    + "..."
+                    + transfer.message.payload[-20:]
+                )
+            )
         else:
             text.bold("Plain Message:")
             text.br()
@@ -63,7 +68,7 @@ def get_mosaic_confirmation_sections(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     transfer: NEM2TransferTransaction,
-    mosaic: NEMMosaic
+    mosaic: NEMMosaic,
 ):
 
     mosaic_confirmation_sections = []
@@ -99,12 +104,14 @@ def _get_xem_amount(transfer: NEM2TransferTransaction):
     # if there are mosaics but do not include xem, 0 xem is sent
     return 0
 
+
 async def _require_confirm_transfer(ctx, recipient, value):
     text = Text("Confirm transfer", ui.ICON_SEND, ui.GREEN)
     text.bold("Send %s XEM" % format_amount(value, NEM2_MAX_DIVISIBILITY))
     text.normal("to")
     text.mono(*split_address(recipient))
     await require_confirm(ctx, text, ButtonRequestType.ConfirmOutput)
+
 
 async def _require_confirm_message(ctx, message):
     text = Text("Confirm message", ui.ICON_SEND, ui.GREEN)

@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxCosign:
@@ -30,7 +31,7 @@ class TestMsgNEM2SignTxCosign:
             client,
             parse_path("m/44'/43'/0'/0'/0'"),
             {
-                "hash":"09CF3DB1DD3179065C3841F44021C403B831E7D11C11DA943CB926539B921CE5",
+                "hash": "09CF3DB1DD3179065C3841F44021C403B831E7D11C11DA943CB926539B921CE5",
             },
         )
 

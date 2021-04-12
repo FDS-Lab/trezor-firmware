@@ -1,52 +1,60 @@
+from ubinascii import hexlify, unhexlify
+
 from trezor.crypto.curve import ed25519
 from trezor.crypto.hashlib import sha3_256
-from trezor.messages.NEM2SignedTx import NEM2SignedTx
 from trezor.messages.NEM2CosignatureSignedTx import NEM2CosignatureSignedTx
+from trezor.messages.NEM2SignedTx import NEM2SignedTx
 from trezor.messages.NEM2SignTx import NEM2SignTx
-from ubinascii import unhexlify, hexlify
 
 from apps.common import seed
 from apps.common.paths import validate_path
 from apps.nem2 import (
     CURVE,
-    transfer,
-    mosaic,
-    namespace,
-    metadata,
+    account_link,
+    account_restriction,
     aggregate,
     hash_lock,
-    secret_lock,
+    metadata,
+    mosaic,
+    mosaic_restriction,
     multisig,
-    account_restriction,
-    account_link,
-    mosaic_restriction
+    namespace,
+    secret_lock,
+    transfer,
 )
 from apps.nem2.helpers import (
-    validate_nem2_path,
     NEM2_HASH_ALG,
+    NEM2_TRANSACTION_TYPE_AGGREGATE_BONDED,
     NEM2_TRANSACTION_TYPE_AGGREGATE_COMPLETE,
-    NEM2_TRANSACTION_TYPE_AGGREGATE_BONDED
+    validate_nem2_path,
 )
 from apps.nem2.validators import validate
+
 
 # Included fields are `size`, `verifiableEntityHeader_Reserved1`,
 # `signature`, `signerPublicKey` and `entityBody_Reserved1`.
 def get_transaction_header_size():
     return 4 + 4 + 64 + 32 + 4
 
+
 # Included fields are the transaction header, `version`,
 # `network`, `type`, `maxFee` and `deadline`
 def get_transaction_body_index():
     return get_transaction_header_size() + 1 + 1 + 2 + 8 + 8
 
+
 def is_aggregate_transaction(tx_type):
-    return (tx_type == NEM2_TRANSACTION_TYPE_AGGREGATE_BONDED or
-        tx_type == NEM2_TRANSACTION_TYPE_AGGREGATE_COMPLETE)
+    return (
+        tx_type == NEM2_TRANSACTION_TYPE_AGGREGATE_BONDED
+        or tx_type == NEM2_TRANSACTION_TYPE_AGGREGATE_COMPLETE
+    )
+
 
 def get_signing_bytes(payload_buffer_without_header, generation_hash_bytes, tx_type):
     if is_aggregate_transaction(tx_type):
         return generation_hash_bytes + payload_buffer_without_header[:52]
     return generation_hash_bytes + payload_buffer_without_header
+
 
 async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     validate(msg)
@@ -64,7 +72,9 @@ async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     if msg.cosigning:
         resp = NEM2CosignatureSignedTx()
         resp.parent_hash = unhexlify(msg.cosigning)
-        resp.signature = ed25519.sign(node.private_key(), unhexlify(msg.cosigning), NEM2_HASH_ALG)
+        resp.signature = ed25519.sign(
+            node.private_key(), unhexlify(msg.cosigning), NEM2_HASH_ALG
+        )
         return resp
 
     if msg.multisig:
@@ -82,7 +92,9 @@ async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     elif msg.mosaic_supply:
         tx = await mosaic.mosaic_supply(ctx, common, msg.mosaic_supply)
     elif msg.namespace_registration:
-        tx = await namespace.namespace_registration(ctx, common, msg.namespace_registration)
+        tx = await namespace.namespace_registration(
+            ctx, common, msg.namespace_registration
+        )
     elif msg.address_alias:
         tx = await namespace.address_alias(ctx, common, msg.address_alias)
     elif msg.namespace_metadata:
@@ -102,19 +114,31 @@ async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     elif msg.secret_proof:
         tx = await secret_lock.secret_proof(ctx, common, msg.secret_proof)
     elif msg.multisig_modification:
-        tx = await multisig.multisig_modification(ctx, common, msg.multisig_modification)
+        tx = await multisig.multisig_modification(
+            ctx, common, msg.multisig_modification
+        )
     elif msg.account_address_restriction:
-        tx = await account_restriction.account_restriction(ctx, common, msg.account_address_restriction)
+        tx = await account_restriction.account_restriction(
+            ctx, common, msg.account_address_restriction
+        )
     elif msg.account_mosaic_restriction:
-        tx = await account_restriction.account_restriction(ctx, common, msg.account_mosaic_restriction)
+        tx = await account_restriction.account_restriction(
+            ctx, common, msg.account_mosaic_restriction
+        )
     elif msg.account_operation_restriction:
-        tx = await account_restriction.account_restriction(ctx, common, msg.account_operation_restriction)
+        tx = await account_restriction.account_restriction(
+            ctx, common, msg.account_operation_restriction
+        )
     elif msg.account_link:
         tx = await account_link.account_link(ctx, common, msg.account_link)
     elif msg.mosaic_global_restriction:
-        tx = await mosaic_restriction.global_restriction(ctx, common, msg.mosaic_global_restriction)
+        tx = await mosaic_restriction.global_restriction(
+            ctx, common, msg.mosaic_global_restriction
+        )
     elif msg.mosaic_address_restriction:
-        tx = await mosaic_restriction.address_restriction(ctx, common, msg.mosaic_address_restriction)
+        tx = await mosaic_restriction.address_restriction(
+            ctx, common, msg.mosaic_address_restriction
+        )
     else:
         raise ValueError("No transaction provided")
 
@@ -136,9 +160,11 @@ async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     # sign tx
     generation_hash_bytes = unhexlify(msg.generation_hash)
     # Will be used for calculating signed payload, and subsequent hash.
-    payload_without_header = tx[get_transaction_header_size():]
+    payload_without_header = tx[get_transaction_header_size() :]
 
-    signing_bytes = get_signing_bytes(payload_without_header, generation_hash_bytes, msg.transaction.type)
+    signing_bytes = get_signing_bytes(
+        payload_without_header, generation_hash_bytes, msg.transaction.type
+    )
     signature = ed25519.sign(node.private_key(), signing_bytes, NEM2_HASH_ALG)
 
     # prepare payload
@@ -152,7 +178,9 @@ async def sign_tx(ctx, msg: NEM2SignTx, keychain):
     transaction_body = payload_without_header
     # In case of aggregate transactions, we hash only the merkle transaction hash.
     if is_aggregate_transaction(msg.transaction.type):
-        transaction_body = tx[get_transaction_header_size():get_transaction_body_index() + 32]
+        transaction_body = tx[
+            get_transaction_header_size() : get_transaction_body_index() + 32
+        ]
     # 4) Add all the parts together
     # layout: `signature_R || signerPublicKey || generationHash || EntityDataBuffer`
     hash_bytes = first_half_of_sig + signer + generation_hash_bytes + transaction_body

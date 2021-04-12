@@ -1,24 +1,24 @@
 from trezor import ui
 from trezor.messages import (
     ButtonRequestType,
-    NEM2TransactionCommon,
+    NEM2AccountLinkTransaction,
     NEM2EmbeddedTransactionCommon,
-    NEM2AccountLinkTransaction
+    NEM2TransactionCommon,
 )
-
-from trezor.ui.text import Text
 from trezor.ui.scroll import Paginated
-
-from ..layout import require_confirm_final, require_confirm_text
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..layout import require_confirm_final, require_confirm_text
+
 
 async def ask_account_link(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     account_link: NEM2AccountLinkTransaction,
-    embedded=False
+    embedded=False,
 ):
 
     properties = []
@@ -35,7 +35,7 @@ async def ask_account_link(
     t = Text("Confirm properties", ui.ICON_SEND, new_lines=False)
     t.bold("Link Action:")
     t.br()
-    t.normal('{}'.format(link_action_text))
+    t.normal("{}".format(link_action_text))
     properties.append(t)
 
     paginated = Paginated(properties)

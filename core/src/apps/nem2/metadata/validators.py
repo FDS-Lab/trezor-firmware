@@ -1,18 +1,20 @@
-from trezor.messages.NEM2NamespaceMetadataTransaction import NEM2NamespaceMetadataTransaction
-from trezor.messages.NEM2MosaicMetadataTransaction import NEM2MosaicMetadataTransaction
-
-from ..helpers import (
-    NEM2_TRANSACTION_TYPE_NAMESPACE_METADATA,
-    NEM2_TRANSACTION_TYPE_MOSAIC_METADATA
-)
-
 from ubinascii import unhexlify
 
+from trezor.messages.NEM2MosaicMetadataTransaction import NEM2MosaicMetadataTransaction
+from trezor.messages.NEM2NamespaceMetadataTransaction import (
+    NEM2NamespaceMetadataTransaction,
+)
 from trezor.wire import ProcessError
+
+from ..helpers import (
+    NEM2_TRANSACTION_TYPE_MOSAIC_METADATA,
+    NEM2_TRANSACTION_TYPE_NAMESPACE_METADATA,
+)
+
 
 def _validate_metadata(
     metadata: NEM2NamespaceMetadataTransaction | NEM2MosaicMetadataTransaction,
-    entity_type: int
+    entity_type: int,
 ):
 
     # https://nemtech.github.io/concepts/metadata.html#namespace-metadata-transaction

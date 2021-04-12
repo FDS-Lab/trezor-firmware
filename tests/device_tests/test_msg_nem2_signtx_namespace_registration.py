@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxNamespaceRegistration:
@@ -39,8 +40,8 @@ class TestMsgNEM2SignTxNamespaceRegistration:
                 "registrationType": 0,
                 "namespaceName": "testnamespace",
                 "id": "EAA4CB0862DBCB67",
-                "duration": "1000000"
-            }
+                "duration": "1000000",
+            },
         )
 
         assert (
@@ -69,7 +70,7 @@ class TestMsgNEM2SignTxNamespaceRegistration:
                 "namespaceName": "sub",
                 "id": "B1B6FADB51C1368C",
                 "parentId": "EAA4CB0862DBCB67",
-            }
+            },
         )
 
         assert (

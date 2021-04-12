@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxSecretProof:
@@ -38,11 +39,11 @@ class TestMsgNEM2SignTxSecretProof:
                 "deadline": "113728610090",
                 "recipientAddress": {
                     "address": "TABLKWFB5SWIEHJBZNOHJC3N65QO2FR2W364Q5TX",
-                    "networkType": nem2.NETWORK_TYPE_TEST_NET
+                    "networkType": nem2.NETWORK_TYPE_TEST_NET,
                 },
                 "hashType": nem2.SECRET_LOCK_SHA3_256,
                 "proof": "a25fde258f078ddce870",
-                "secret":"D77E46ED5EC0EA4BD08AA77EEA9F17076F40BC2C2843B1BBB46DAA1D98DBF1B7"
+                "secret": "D77E46ED5EC0EA4BD08AA77EEA9F17076F40BC2C2843B1BBB46DAA1D98DBF1B7",
             },
         )
 

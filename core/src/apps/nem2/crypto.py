@@ -2,11 +2,13 @@
 # which are used as part of the nem2-sdk for message encryption
 
 import math
-from ubinascii import unhexlify, hexlify
+from ubinascii import hexlify, unhexlify
+
+from trezor.crypto import hmac
 from trezor.crypto.curve import ed25519
 from trezor.crypto.hashlib import sha3_256, sha3_512, sha256
-from trezor.crypto import hmac
 from trezor.utils import HashWriter
+
 
 def derive_shared_key(private_key, public_key):
     shared_secret = derive_shared_secret(private_key, public_key)
@@ -17,6 +19,7 @@ def derive_shared_key(private_key, public_key):
 
     shared_key = hkdf_expand(prk, "catapult")
     return shared_key
+
 
 def derive_shared_secret(private_key, public_key):
     d = prepare_for_scalar_mult(private_key)
@@ -30,8 +33,10 @@ def derive_shared_secret(private_key, public_key):
     pack(shared_secret, p)
     return shared_secret
 
+
 def hkdf_extract(salt, ikm):
     return hmac.new(salt, ikm, sha256).digest()
+
 
 def hkdf_expand(prk, info):
     info_bytes = bytes(info, "ascii")
@@ -50,10 +55,12 @@ def hkdf_expand(prk, info):
     msg = t[start : end + info_length + 1]
     return hmac.new(prk, msg, sha256).digest()
 
+
 def prepare_for_scalar_mult(secret_key):
     d = sha3_512(secret_key, keccak=True).digest()
     e = clamp(bytearray(d))
     return e
+
 
 def clamp(d):
     d[0] &= 248
@@ -62,12 +69,14 @@ def clamp(d):
 
     return d
 
+
 def gf(init=None):
     r = [0] * 16
-    if (init):
+    if init:
         for i in range(0, len(init)):
             r[i] = init[i]
     return r
+
 
 def unpack(r, p):
     t = gf()
@@ -80,9 +89,26 @@ def unpack(r, p):
     set25519(r[2], gf([1]))
     unpack25519(r[1], p)
     S(num, r[1])
-    D = gf([0x78a3, 0x1359, 0x4dca, 0x75eb, 0xd8ab, 0x4141, 0x0a4d,
-        0x0070, 0xe898, 0x7779, 0x4079, 0x8cc7, 0xfe73, 0x2b6f, 0x6cee, 0x5203
-    ])
+    D = gf(
+        [
+            0x78A3,
+            0x1359,
+            0x4DCA,
+            0x75EB,
+            0xD8AB,
+            0x4141,
+            0x0A4D,
+            0x0070,
+            0xE898,
+            0x7779,
+            0x4079,
+            0x8CC7,
+            0xFE73,
+            0x2B6F,
+            0x6CEE,
+            0x5203,
+        ]
+    )
 
     M(den, num, D)
     Z(num, num, r[2])
@@ -101,22 +127,40 @@ def unpack(r, p):
     S(chk, r[0])
     M(chk, chk, den)
 
-    if (neq25519(chk, num)):
-        I = gf([0xa0b0, 0x4a0e, 0x1b27, 0xc4ee, 0xe478, 0xad2f, 0x1806,
-            0x2f43, 0xd7a7, 0x3dfb, 0x0099, 0x2b4d, 0xdf0b, 0x4fc1, 0x2480, 0x2b83,
-        ])
+    if neq25519(chk, num):
+        I = gf(
+            [
+                0xA0B0,
+                0x4A0E,
+                0x1B27,
+                0xC4EE,
+                0xE478,
+                0xAD2F,
+                0x1806,
+                0x2F43,
+                0xD7A7,
+                0x3DFB,
+                0x0099,
+                0x2B4D,
+                0xDF0B,
+                0x4FC1,
+                0x2480,
+                0x2B83,
+            ]
+        )
         M(r[0], r[0], I)
 
     S(chk, r[0])
     M(chk, chk, den)
-    if (neq25519(chk, num)):
+    if neq25519(chk, num):
         return -1
 
-    if (par25519(r[0]) != (p[31] >> 7)):
+    if par25519(r[0]) != (p[31] >> 7):
         Z(r[0], gf0, r[0])
 
     M(r[3], r[0], r[1])
     return 0
+
 
 def pack(r, p):
     tx = gf()
@@ -129,25 +173,31 @@ def pack(r, p):
     pack25519(r, ty)
     r[31] ^= par25519(tx) << 7
 
+
 def set25519(r, a):
     for i in range(0, 16):
         r[i] = a[i] | 0
 
+
 def unpack25519(o, n):
     for i in range(0, 16):
         o[i] = n[2 * i] + (n[2 * i + 1] << 8)
-    o[15] &= 0x7fff
+    o[15] &= 0x7FFF
+
 
 def S(o, a):
     M(o, a, a)
 
-def A (o, a, b):
+
+def A(o, a, b):
     for i in range(0, 16):
         o[i] = a[i] + b[i]
+
 
 def Z(o, a, b):
     for i in range(0, 16):
         o[i] = a[i] - b[i]
+
 
 def M(o, a, b):
     t0 = 0
@@ -604,6 +654,7 @@ def M(o, a, b):
     o[14] = t14
     o[15] = t15
 
+
 def pow2523(o, i):
     c = gf()
     for a in range(0, 16):
@@ -611,14 +662,16 @@ def pow2523(o, i):
 
     for a in range(250, -1, -1):
         S(c, c)
-        if(a != 1):
+        if a != 1:
             M(c, c, i)
 
     for a in range(0, 16):
         o[a] = c[a]
 
+
 def crypto_verify_32(x, xi, y, yi):
     return vn(x, xi, y, yi, 32)
+
 
 def vn(x, xi, y, yi, n):
     d = 0
@@ -627,6 +680,7 @@ def vn(x, xi, y, yi, n):
 
     return zero_fill_right_shift(1 & (d - 1), 8) - 1
 
+
 def neq25519(a, b):
     c = [0] * 32
     d = [0] * 32
@@ -634,6 +688,7 @@ def neq25519(a, b):
     pack25519(c, a)
     pack25519(d, b)
     return crypto_verify_32(c, 0, d, 0)
+
 
 def pack25519(o, n):
     m = gf()
@@ -647,20 +702,21 @@ def pack25519(o, n):
     car25519(t)
 
     for j in range(0, 2):
-        m[0] = t[0] - 0xffed
+        m[0] = t[0] - 0xFFED
 
         for i in range(1, 15):
-            m[i] = t[i] - 0xffff - ((m[i - 1] >> 16) & 1)
-            m[i - 1] &= 0xffff
+            m[i] = t[i] - 0xFFFF - ((m[i - 1] >> 16) & 1)
+            m[i - 1] &= 0xFFFF
 
-        m[15] = t[15] - 0x7fff - ((m[14] >> 16) & 1)
+        m[15] = t[15] - 0x7FFF - ((m[14] >> 16) & 1)
         b = (m[15] >> 16) & 1
-        m[14] &= 0xffff
+        m[14] &= 0xFFFF
         sel25519(t, m, 1 - b)
 
     for i in range(0, 16):
-        o[2 * i] = t[i] & 0xff
+        o[2 * i] = t[i] & 0xFF
         o[2 * i + 1] = t[i] >> 8
+
 
 def sel25519(p, q, b):
     c = ~(b - 1)
@@ -668,6 +724,7 @@ def sel25519(p, q, b):
         t = c & (p[i] ^ q[i])
         p[i] ^= t
         q[i] ^= t
+
 
 def car25519(o):
     c = 1
@@ -677,10 +734,12 @@ def car25519(o):
         o[i] = v - c * 65536
     o[0] += c - 1 + 37 * (c - 1)
 
+
 def par25519(a):
     d = [0] * 32
     pack25519(d, a)
     return d[0] & 1
+
 
 def scalar_mult(p, q, s):
     set25519(p[0], gf([0]))
@@ -694,22 +753,25 @@ def scalar_mult(p, q, s):
         add(p, p)
         cswap(p, q, b)
 
+
 def cswap(p, q, b):
     for i in range(0, 4):
         sel25519(p[i], q[i], b)
 
-def inv25519 (o, i):
+
+def inv25519(o, i):
     c = gf()
     for a in range(0, 16):
         c[a] = i[a]
 
     for a in range(253, -1, -1):
         S(c, c)
-        if(a != 2 and a != 4):
+        if a != 2 and a != 4:
             M(c, c, i)
 
     for a in range(0, 16):
         o[a] = c[a]
+
 
 def add(p, q):
     a = gf()
@@ -730,9 +792,26 @@ def add(p, q):
     M(b, b, t)
     M(c, p[3], q[3])
 
-    D2 = gf([0xf159, 0x26b2, 0x9b94, 0xebd6, 0xb156, 0x8283, 0x149a,
-        0x00e0, 0xd130, 0xeef3, 0x80f2, 0x198e, 0xfce7, 0x56df, 0xd9dc, 0x2406,
-    ])
+    D2 = gf(
+        [
+            0xF159,
+            0x26B2,
+            0x9B94,
+            0xEBD6,
+            0xB156,
+            0x8283,
+            0x149A,
+            0x00E0,
+            0xD130,
+            0xEEF3,
+            0x80F2,
+            0x198E,
+            0xFCE7,
+            0x56DF,
+            0xD9DC,
+            0x2406,
+        ]
+    )
 
     M(c, c, D2)
     M(d, p[2], q[2])
@@ -745,6 +824,7 @@ def add(p, q):
     M(p[1], h, g)
     M(p[2], g, f)
     M(p[3], e, h)
+
 
 def zero_fill_right_shift(val, n):
     return (val >> n) if val >= 0 else ((val + 0x100000000) >> n)

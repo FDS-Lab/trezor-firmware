@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxMosaicSupply:
@@ -38,7 +39,7 @@ class TestMsgNEM2SignTxMosaicSupply:
                 "deadline": "113728610090",
                 "mosaicId": "4ADB6668071C4969",
                 "action": 1,
-                "delta": "1000000"
+                "delta": "1000000",
             },
         )
 

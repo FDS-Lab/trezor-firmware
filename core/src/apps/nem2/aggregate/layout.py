@@ -1,13 +1,14 @@
 from trezor import ui
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2AggregateTransaction import NEM2AggregateTransaction
-from trezor.messages.NEM2InnerTransaction import NEM2InnerTransaction
 from trezor.messages.NEM2Cosignature import NEM2Cosignature
-
+from trezor.messages.NEM2InnerTransaction import NEM2InnerTransaction
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.ui.scroll import Paginated
 from trezor.ui.text import Text
 
+from apps.common.confirm import require_confirm, require_hold_to_confirm
+from apps.common.layout import require_confirm, split_address
 from apps.nem2.helpers import captialize_string
 
 from ..layout import (
@@ -16,17 +17,15 @@ from ..layout import (
     require_confirm_final,
     require_confirm_text,
 )
+from .helpers import map_type_to_layout, map_type_to_property
 
-from apps.common.layout import require_confirm, split_address
-from apps.common.confirm import require_confirm, require_hold_to_confirm
-
-from .helpers import map_type_to_property, map_type_to_layout
 
 async def ask_aggregate(
     ctx, common: NEM2TransactionCommon, aggregate: NEM2AggregateTransaction
 ):
     await confirm_properties(ctx, aggregate)
     await require_confirm_final(ctx, common.max_fee)
+
 
 async def confirm_properties(ctx, aggregate: NEM2AggregateTransaction):
     # Starting screen
@@ -53,7 +52,8 @@ async def confirm_properties(ctx, aggregate: NEM2AggregateTransaction):
             ctx,
             transaction.common,
             transaction.__dict__[transaction_type_key],
-            embedded=True)
+            embedded=True,
+        )
 
     # Make the user confirm the cosignatures
     for index, cosignature in enumerate(aggregate.cosignatures):
@@ -62,6 +62,7 @@ async def confirm_properties(ctx, aggregate: NEM2AggregateTransaction):
         msg.normal("cosignature {}?".format(index + 1))
         await require_confirm(ctx, msg, ButtonRequestType.ConfirmOutput)
         await create_cosignature_confirm_page(ctx, cosignature)
+
 
 async def create_cosignature_confirm_page(ctx, cosignature: NEM2Cosignature):
     properties = []

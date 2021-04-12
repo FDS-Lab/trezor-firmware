@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxMosaics:
@@ -40,8 +41,8 @@ class TestMsgNEM2SignTxMosaics:
                 "mosaicId": "0B65C4B29A80C619",
                 "flags": 7,
                 "divisibility": 100,
-                "duration": "123"
-            }
+                "duration": "123",
+            },
         )
 
         assert (

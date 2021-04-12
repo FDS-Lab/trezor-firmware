@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxAggregate:
@@ -44,18 +45,13 @@ class TestMsgNEM2SignTxAggregate:
                         "publicKey": "778D0B0CF67E361BE774AF22FA27B29C82FE6A9160537EB6A6D9C6ABE4796778",
                         "recipientAddress": {
                             "address": "TB6YHDGPYV3TGEFE7Z3BH2EXJZNVJJTH3EWL76PD",
-                            "networkType": nem2.NETWORK_TYPE_TEST_NET
+                            "networkType": nem2.NETWORK_TYPE_TEST_NET,
                         },
                         "message": {
                             "payload": "send 100 cat.currency to distributor",
-                            "type": 0
+                            "type": 0,
                         },
-                        "mosaics": [
-                            {
-                                "id": "9adf3b117a3c10ca",
-                                "amount": "100"
-                            }
-                        ]
+                        "mosaics": [{"id": "9adf3b117a3c10ca", "amount": "100"}],
                     },
                     {
                         "network": nem2.NETWORK_TYPE_TEST_NET,
@@ -66,19 +62,19 @@ class TestMsgNEM2SignTxAggregate:
                         "duration": 123,
                         "nonce": 3095715558,
                         "flags": 7,
-                        "divisibility": 100
-                    }
+                        "divisibility": 100,
+                    },
                 ],
                 "cosignatures": [
                     {
                         "signature": "BBCD0639DD66E90F0C828FB76938B32DBD501173740F315D3BAD45804184B6CF843E4553F3177E3394992E6C893ADF1026394CCD05DD647EC6E00BB1B3843300",
-                        "publicKey": "778D0B0CF67E361BE774AF22FA27B29C82FE6A9160537EB6A6D9C6ABE4796778"
+                        "publicKey": "778D0B0CF67E361BE774AF22FA27B29C82FE6A9160537EB6A6D9C6ABE4796778",
                     },
                     {
                         "signature": "7EDBB4A981007E6BFEBFF8018FB7941A4C9583805E6560D725E3B53A6FE7BA1BA24567E5EC994300575176B39C56ABFEC1C75C45749896E6FDE3BEE315C1E70C",
-                        "publicKey": "A8F70E4D5C357273968B12417AE8B742E35E530623C2488D0A73306B41271500"
-                    }
-                ]
+                        "publicKey": "A8F70E4D5C357273968B12417AE8B742E35E530623C2488D0A73306B41271500",
+                    },
+                ],
             },
         )
 

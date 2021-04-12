@@ -1,50 +1,51 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
 from trezor.messages.NEM2SecretLockTransaction import NEM2SecretLockTransaction
-
-from trezor.ui.text import Text
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.ui.scroll import Paginated
-
-from ..helpers import (
-    NEM2_SECRET_LOCK_SHA3_256,
-    NEM2_SECRET_LOCK_KECCAK_256,
-    NEM2_SECRET_LOCK_HASH_160,
-    NEM2_SECRET_LOCK_HASH_256
-)
-from ..layout import require_confirm_final
+from trezor.ui.text import Text
 
 from apps.common.confirm import require_confirm
 from apps.common.layout import split_address
+
+from ..helpers import (
+    NEM2_SECRET_LOCK_HASH_160,
+    NEM2_SECRET_LOCK_HASH_256,
+    NEM2_SECRET_LOCK_KECCAK_256,
+    NEM2_SECRET_LOCK_SHA3_256,
+)
+from ..layout import require_confirm_final
 
 enum_to_friendly_text = {
     NEM2_SECRET_LOCK_SHA3_256: "SHA-3 256",
     NEM2_SECRET_LOCK_KECCAK_256: "Keccak 256",
     NEM2_SECRET_LOCK_HASH_160: "Hash 160",
-    NEM2_SECRET_LOCK_HASH_256: "Hash 256"
+    NEM2_SECRET_LOCK_HASH_256: "Hash 256",
 }
+
 
 async def ask_secret_lock(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     secret_lock: NEM2SecretLockTransaction,
-    embedded=False
+    embedded=False,
 ):
     await require_confirm_properties_lock(ctx, secret_lock)
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
 
+
 async def ask_secret_proof(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     secret_proof: NEM2SecretProofTransaction,
-    embedded=False
+    embedded=False,
 ):
     await require_confirm_properties_proof(ctx, secret_proof)
     if not embedded:
         await require_confirm_final(ctx, common.max_fee)
+
 
 async def require_confirm_properties_lock(ctx, secret_lock: NEM2SecretLockTransaction):
     properties = []
@@ -74,7 +75,7 @@ async def require_confirm_properties_lock(ctx, secret_lock: NEM2SecretLockTransa
         friendly_text = enum_to_friendly_text[secret_lock.hash_algorithm]
         t = Text("Confirm properties", ui.ICON_SEND, new_lines=True, max_lines=10)
         t.bold("Hash algorithm used:")
-        t.normal('{} ({})'.format(friendly_text, secret_lock.hash_algorithm))
+        t.normal("{} ({})".format(friendly_text, secret_lock.hash_algorithm))
         properties.append(t)
     # Secret
     if secret_lock.secret:
@@ -86,7 +87,10 @@ async def require_confirm_properties_lock(ctx, secret_lock: NEM2SecretLockTransa
     paginated = Paginated(properties)
     await require_confirm(ctx, paginated, ButtonRequestType.ConfirmOutput)
 
-async def require_confirm_properties_proof(ctx, secret_proof: NEM2SecretProofTransaction):
+
+async def require_confirm_properties_proof(
+    ctx, secret_proof: NEM2SecretProofTransaction
+):
     properties = []
     # Recipient address
     if secret_proof.recipient_address:
@@ -99,7 +103,7 @@ async def require_confirm_properties_proof(ctx, secret_proof: NEM2SecretProofTra
         friendly_text = enum_to_friendly_text[secret_proof.hash_algorithm]
         t = Text("Confirm properties", ui.ICON_SEND, new_lines=True, max_lines=10)
         t.bold("Hash algorithm used:")
-        t.normal('{} ({})'.format(friendly_text, secret_proof.hash_algorithm))
+        t.normal("{} ({})".format(friendly_text, secret_proof.hash_algorithm))
         properties.append(t)
     # Secret
     if secret_proof.secret:

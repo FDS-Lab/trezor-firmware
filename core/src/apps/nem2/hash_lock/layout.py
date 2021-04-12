@@ -1,25 +1,25 @@
 from trezor import ui
-
 from trezor.messages import ButtonRequestType
-from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.messages.NEM2EmbeddedTransactionCommon import NEM2EmbeddedTransactionCommon
 from trezor.messages.NEM2HashLockTransaction import NEM2HashLockTransaction
-
-from trezor.ui.text import Text
+from trezor.messages.NEM2TransactionCommon import NEM2TransactionCommon
 from trezor.ui.scroll import Paginated
+from trezor.ui.text import Text
+
+from apps.common.confirm import require_confirm
 
 from ..layout import require_confirm_final
 
-from apps.common.confirm import require_confirm
 
 async def ask_hash_lock(
     ctx,
     common: NEM2TransactionCommon | NEM2EmbeddedTransactionCommon,
     hash_lock: NEM2HashLockTransaction,
-    embedded=False
+    embedded=False,
 ):
     await require_confirm_properties(ctx, hash_lock)
     await require_confirm_final(ctx, common.max_fee)
+
 
 async def require_confirm_properties(ctx, hash_lock: NEM2HashLockTransaction):
     properties = []

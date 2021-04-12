@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxAccountOperationRestriction:
@@ -37,8 +38,11 @@ class TestMsgNEM2SignTxAccountOperationRestriction:
                 "maxFee": "0",
                 "deadline": "113248176649",
                 "restrictionType": nem2.ACCOUNT_RESTRICTION_ALLOW_INCOMING_TRANSACTION_TYPE,
-                "restrictionAdditions": [nem2.TYPE_ACCOUNT_METADATA, nem2.TYPE_MOSAIC_ALIAS],
-                "restrictionDeletions": [nem2.TYPE_HASH_LOCK]
+                "restrictionAdditions": [
+                    nem2.TYPE_ACCOUNT_METADATA,
+                    nem2.TYPE_MOSAIC_ALIAS,
+                ],
+                "restrictionDeletions": [nem2.TYPE_HASH_LOCK],
             },
         )
 

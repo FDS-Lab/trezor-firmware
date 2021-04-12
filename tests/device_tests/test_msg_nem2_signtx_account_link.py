@@ -21,6 +21,7 @@ from trezorlib.tools import parse_path
 
 from ..common import MNEMONIC12
 
+
 @pytest.mark.altcoin
 @pytest.mark.nem2
 class TestMsgNEM2SignTxAccountLink:
@@ -37,7 +38,7 @@ class TestMsgNEM2SignTxAccountLink:
                 "maxFee": "0",
                 "deadline": "113248176649",
                 "remotePublicKey": "51585DA12749432888AC492B4D3AB7E5AAC0108773ED12A01EC8EB8EECA1D820",
-                "linkAction": 1
+                "linkAction": 1,
             },
         )
 
