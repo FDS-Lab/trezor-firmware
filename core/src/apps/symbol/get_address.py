@@ -1,4 +1,4 @@
-from trezor.messages.NEMAddress import NEMAddress
+from trezor.messages.SymbolAddress import SymbolAddress
 from trezor.ui.layouts import show_address
 
 from apps.common.keychain import with_slip44_keychain
@@ -19,7 +19,6 @@ async def get_address(ctx, msg, keychain):
 
     node = keychain.derive(msg.address_n)
     address = node.nem_address(network)
-    print("node", node.values)
     print("address", address)
 
     if msg.show_display:
@@ -32,4 +31,4 @@ async def get_address(ctx, msg, keychain):
             network=get_network_str(network),
         )
 
-    return NEMAddress(address=address)
+    return SymbolAddress(address=address)

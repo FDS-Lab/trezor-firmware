@@ -1,0 +1,25 @@
+syntax = "proto2";
+package hw.trezor.messages.symbol;
+
+// Sugar for easier handling in Java
+option java_package = "com.satoshilabs.trezor.lib.protobuf";
+option java_outer_classname = "TrezorMessageSymbol";
+
+/**
+ * Request: Ask the device for a Symbol address.
+ * @start
+ * @next SymbolAddress
+ * @next Failure
+ */
+message SymbolGetAddress {
+    repeated uint32 address_n = 1;  // BIP-32-style path to derive the key from master node
+    optional bool show_display = 2; // optionally prompt for confirmation on trezor display
+}
+
+/**
+ * Response: A Symbol address.
+ * @end
+ */
+message SymbolAddress {
+    required string address = 1;    // prefixed bech32 Symbol address
+}

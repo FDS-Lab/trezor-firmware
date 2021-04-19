@@ -209,3 +209,5 @@ if not utils.BITCOIN_ONLY:
     WebAuthnCredentials: Literal[801] = 801
     WebAuthnAddResidentCredential: Literal[802] = 802
     WebAuthnRemoveResidentCredential: Literal[803] = 803
+SymbolGetAddress: Literal[900] = 900
+SymbolAddress: Literal[901] = 901
