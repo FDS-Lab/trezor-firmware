@@ -63,6 +63,7 @@ def get_features() -> Features:
             Capability.Bitcoin,
             Capability.Bitcoin_like,
             Capability.Binance,
+            Capability.Symbol,
             Capability.Cardano,
             Capability.Crypto,
             Capability.EOS,

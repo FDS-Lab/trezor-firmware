@@ -19,6 +19,7 @@ CORE_PROTOBUF_SOURCES="\
     $PROTOB/messages-nem.proto \
     $PROTOB/messages-ripple.proto \
     $PROTOB/messages-stellar.proto \
+    $PROTOB/messages-symbol.proto \
     $PROTOB/messages-tezos.proto \
     $PROTOB/messages-webauthn.proto \
 "

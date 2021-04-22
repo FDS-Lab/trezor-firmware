@@ -19,8 +19,6 @@ async def get_address(ctx, msg, keychain):
 
     node = keychain.derive(msg.address_n)
     address = node.nem_address(network)
-    print("node", node.values)
-    print("address", address)
 
     if msg.show_display:
         desc = address_n_to_str(msg.address_n)

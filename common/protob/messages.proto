@@ -281,7 +281,7 @@ enum MessageType {
     MessageType_WebAuthnAddResidentCredential = 802 [(wire_in) = true];
     MessageType_WebAuthnRemoveResidentCredential = 803 [(wire_in) = true];
 
-    // Binance
+    // Symbol
     MessageType_SymbolGetAddress = 900 [(wire_in) = true];
     MessageType_SymbolAddress = 901 [(wire_out) = true];
 }

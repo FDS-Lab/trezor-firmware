@@ -34056,6 +34056,23 @@
                     "url": "https://nem.io/downloads/"
                 }
             ]
+        },
+        "symbol:XYM": {
+            "links": {
+                "Homepage": "https://nem.io"
+            },
+            "marketcap_usd": 3492873421,
+            "name": "Symbol",
+            "shortcut": "XYM",
+            "t1_enabled": "yes",
+            "t2_enabled": "yes",
+            "type": "mosaic",
+            "wallet": [
+                {
+                    "name": "Nano Wallet",
+                    "url": "https://nem.io/downloads/"
+                }
+            ]
         }
     },
     "info": {

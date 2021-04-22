@@ -1,57 +1,91 @@
 from micropython import const
 
-from apps.common import HARDENED, paths
+from trezor.crypto import bech32
+from trezor.crypto.scripts import sha256_ripemd160_digest
+from trezor.messages.BinanceCancelMsg import BinanceCancelMsg
+from trezor.messages.BinanceInputOutput import BinanceInputOutput
+from trezor.messages.BinanceOrderMsg import BinanceOrderMsg
+from trezor.messages.BinanceSignTx import BinanceSignTx
+from trezor.messages.BinanceTransferMsg import BinanceTransferMsg
 
-from . import SLIP44_ID
+ENVELOPE_BLUEPRINT = '{{"account_number":"{account_number}","chain_id":"{chain_id}","data":null,"memo":"{memo}","msgs":[{msgs}],"sequence":"{sequence}","source":"{source}"}}'
+MSG_TRANSFER_BLUEPRINT = '{{"inputs":[{inputs}],"outputs":[{outputs}]}}'
+MSG_NEWORDER_BLUEPRINT = '{{"id":"{id}","ordertype":{ordertype},"price":{price},"quantity":{quantity},"sender":"{sender}","side":{side},"symbol":"{symbol}","timeinforce":{timeinforce}}}'
+MSG_CANCEL_BLUEPRINT = '{{"refid":"{refid}","sender":"{sender}","symbol":"{symbol}"}}'
+INPUT_OUTPUT_BLUEPRINT = '{{"address":"{address}","coins":[{coins}]}}'
+COIN_BLUEPRINT = '{{"amount":{amount},"denom":"{denom}"}}'
 
-NEM_NETWORK_MAINNET = const(0x68)
-NEM_NETWORK_TESTNET = const(0x98)
-NEM_NETWORK_MIJIN = const(0x60)
-
-NEM_TRANSACTION_TYPE_TRANSFER = const(0x0101)
-NEM_TRANSACTION_TYPE_IMPORTANCE_TRANSFER = const(0x0801)
-NEM_TRANSACTION_TYPE_AGGREGATE_MODIFICATION = const(0x1001)
-NEM_TRANSACTION_TYPE_MULTISIG_SIGNATURE = const(0x1002)
-NEM_TRANSACTION_TYPE_MULTISIG = const(0x1004)
-NEM_TRANSACTION_TYPE_PROVISION_NAMESPACE = const(0x2001)
-NEM_TRANSACTION_TYPE_MOSAIC_CREATION = const(0x4001)
-NEM_TRANSACTION_TYPE_MOSAIC_SUPPLY_CHANGE = const(0x4002)
-
-NEM_MAX_DIVISIBILITY = const(6)
-NEM_MAX_SUPPLY = const(9_000_000_000)
-
-NEM_SALT_SIZE = const(32)
-AES_BLOCK_SIZE = const(16)
-NEM_HASH_ALG = "keccak"
-NEM_PUBLIC_KEY_SIZE = const(32)  # ed25519 public key
-NEM_LEVY_PERCENTILE_DIVISOR_ABSOLUTE = const(10_000)
-NEM_MOSAIC_AMOUNT_DIVISOR = const(1_000_000)
-
-NEM_MAX_PLAIN_PAYLOAD_SIZE = const(1024)
-NEM_MAX_ENCRYPTED_PAYLOAD_SIZE = const(960)
+# 1*10^8 Jagers equal 1 BNB https://www.binance.vision/glossary/jager
+DECIMALS = const(8)
 
 
-def get_network_str(network: int) -> str:
-    if network == NEM_NETWORK_MAINNET:
-        return "Mainnet"
-    elif network == NEM_NETWORK_TESTNET:
-        return "Testnet"
-    elif network == NEM_NETWORK_MIJIN:
-        return "Mijin"
+def produce_json_for_signing(envelope: BinanceSignTx, msg) -> str:
+    if isinstance(msg, BinanceTransferMsg):
+        json_msg = produce_transfer_json(msg)
+    elif isinstance(msg, BinanceOrderMsg):
+        json_msg = produce_neworder_json(msg)
+    elif isinstance(msg, BinanceCancelMsg):
+        json_msg = produce_cancel_json(msg)
+    else:
+        raise ValueError("input message unrecognized, is of type " + type(msg).__name__)
+
+    if envelope.source is None or envelope.source < 0:
+        raise ValueError("source missing or invalid")
+
+    source = envelope.source
+
+    return ENVELOPE_BLUEPRINT.format(
+        account_number=envelope.account_number,
+        chain_id=envelope.chain_id,
+        memo=envelope.memo,
+        msgs=json_msg,
+        sequence=envelope.sequence,
+        source=source,
+    )
 
 
-def check_path(path: paths.Bip32Path, network: int) -> bool:
-    """Validates that the appropriate coin_type is set for the given network."""
-    if len(path) < 2:
-        return False
+def produce_transfer_json(msg: BinanceTransferMsg) -> str:
+    def make_input_output(input_output: BinanceInputOutput):
+        coins = ",".join(
+            COIN_BLUEPRINT.format(amount=c.amount, denom=c.denom)
+            for c in input_output.coins
+        )
+        return INPUT_OUTPUT_BLUEPRINT.format(address=input_output.address, coins=coins)
 
-    coin_type = path[1] - HARDENED
+    inputs = ",".join(make_input_output(i) for i in msg.inputs)
+    outputs = ",".join(make_input_output(o) for o in msg.outputs)
 
-    if network == NEM_NETWORK_TESTNET:
-        return coin_type == 1
+    return MSG_TRANSFER_BLUEPRINT.format(inputs=inputs, outputs=outputs)
 
-    if network in (NEM_NETWORK_MAINNET, NEM_NETWORK_MIJIN):
-        return coin_type == SLIP44_ID
 
-    # unknown network
-    return False
+def produce_neworder_json(msg: BinanceOrderMsg) -> str:
+    return MSG_NEWORDER_BLUEPRINT.format(
+        id=msg.id,
+        ordertype=msg.ordertype,
+        price=msg.price,
+        quantity=msg.quantity,
+        sender=msg.sender,
+        side=msg.side,
+        symbol=msg.symbol,
+        timeinforce=msg.timeinforce,
+    )
+
+
+def produce_cancel_json(msg: BinanceCancelMsg) -> str:
+    return MSG_CANCEL_BLUEPRINT.format(
+        refid=msg.refid, sender=msg.sender, symbol=msg.symbol
+    )
+
+
+def address_from_public_key(pubkey: bytes, hrp: str) -> str:
+    """
+    Address = RIPEMD160(SHA256(compressed public key))
+    Address_Bech32 = HRP + '1' + bech32.encode(convert8BitsTo5Bits(RIPEMD160(SHA256(compressed public key))))
+    HRP - bnb for productions, tbnb for tests
+    """
+
+    h = sha256_ripemd160_digest(pubkey)
+
+    convertedbits = bech32.convertbits(h, 8, 5, False)
+
+    return bech32.bech32_encode(hrp, convertedbits)

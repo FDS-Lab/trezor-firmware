@@ -525,6 +525,7 @@ if FROZEN:
             SOURCE_PY_DIR + 'trezor/messages/Ripple*.py',
             SOURCE_PY_DIR + 'trezor/messages/Stellar*.py',
             SOURCE_PY_DIR + 'trezor/messages/Tezos*.py',
+            SOURCE_PY_DIR + 'trezor/messages/Symbol*.py',
         ])
     )
 
@@ -548,6 +549,8 @@ if FROZEN:
     if EVERYTHING:
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/binance/*.py'))
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/messages/Binance*.py'))
+        SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/symbol/*.py'))
+        SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'trezor/messages/Symbol*.py'))
 
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/cardano/*.py'))
         SOURCE_PY.extend(Glob(SOURCE_PY_DIR + 'apps/cardano/*/*.py'))

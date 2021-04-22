@@ -27,3 +27,4 @@ if not utils.BITCOIN_ONLY:
 Shamir: Literal[15] = 15
 ShamirGroups: Literal[16] = 16
 PassphraseEntry: Literal[17] = 17
+Symbol: Literal[18] = 18

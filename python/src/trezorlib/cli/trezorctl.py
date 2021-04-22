@@ -46,6 +46,7 @@ from . import (
     ripple,
     settings,
     stellar,
+    symbol,
     tezos,
     with_client,
 )
@@ -74,6 +75,7 @@ COMMAND_ALIASES = {
     "xmr": monero.cli,
     "xrp": ripple.cli,
     "xlm": stellar.cli,
+    "xym": symbol.cli,
     "xtz": tezos.cli,
     # firmware-update aliases:
     "update-firmware": firmware.firmware_update,
@@ -337,6 +339,7 @@ cli.add_command(nem.cli)
 cli.add_command(ripple.cli)
 cli.add_command(settings.cli)
 cli.add_command(stellar.cli)
+cli.add_command(symbol.cli)
 cli.add_command(tezos.cli)
 
 cli.add_command(firmware.firmware_update)

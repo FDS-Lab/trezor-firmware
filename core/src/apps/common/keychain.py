@@ -103,16 +103,19 @@ class Keychain:
     def verify_path(self, path: paths.Bip32Path) -> None:
         if "ed25519" in self.curve and not paths.path_is_hardened(path):
             raise wire.DataError("Non-hardened paths unsupported on Ed25519")
-
+        print("1")
         if not safety_checks.is_strict():
             return
 
+        print("2")
         if self.is_in_keychain(path):
             return
 
+        print("3")
         raise FORBIDDEN_KEY_PATH
 
     def is_in_keychain(self, path: paths.Bip32Path) -> bool:
+        print("schema", self.schemas)
         return any(schema.match(path) for schema in self.schemas)
 
     def _derive_with_cache(

@@ -251,7 +251,9 @@ async def validate_path(
     path: Bip32Path,
     *additional_checks: bool,
 ) -> None:
+    print("Path", path)
     keychain.verify_path(path)
+    print(keychain.is_in_keychain(path))
     if not keychain.is_in_keychain(path) or not all(additional_checks):
         await show_path_warning(ctx, path)
 

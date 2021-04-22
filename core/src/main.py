@@ -30,6 +30,7 @@ def _boot_apps() -> None:
         import apps.tezos
         import apps.eos
         import apps.binance
+        import apps.symbol
         import apps.webauthn
 
     if __debug__:
@@ -51,6 +52,7 @@ def _boot_apps() -> None:
         apps.tezos.boot()
         apps.eos.boot()
         apps.binance.boot()
+        apps.symbol.boot()
         apps.webauthn.boot()
     if __debug__:
         apps.debug.boot()
