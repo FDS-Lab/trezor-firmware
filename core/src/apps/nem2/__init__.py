@@ -1,15 +1,11 @@
 from trezor import wire
 from trezor.messages import MessageType
 
-from apps.common.paths import PATTERN_SEP5
+from apps.common.paths import PATTERN_BIP44
 
 CURVE = "ed25519"
 SLIP44_ID = 4343
-
-PATTERNS = (
-    PATTERN_SEP5,
-    "m/44'/coin_type'/account'/0'/0'",  # NanoWallet compatibility
-)
+PATTERN = PATTERN_BIP44
 
 
 def boot() -> None:
