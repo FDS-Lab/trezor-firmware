@@ -89,6 +89,7 @@ class Keychain:
     ) -> None:
         self.seed = seed
         self.curve = curve
+        print("schemas", schemas)
         self.schemas = tuple(schemas)
         self.slip21_namespaces = tuple(slip21_namespaces)
 
@@ -101,17 +102,16 @@ class Keychain:
         del self.seed
 
     def verify_path(self, path: paths.Bip32Path) -> None:
-        # if "ed25519" in self.curve and not paths.path_is_hardened(path):
-        #     raise wire.DataError("Non-hardened paths unsupported on Ed25519")
+        if "ed25519" in self.curve and not paths.path_is_hardened(path):
+            raise wire.DataError("Non-hardened paths unsupported on Ed25519")
 
-        # if not safety_checks.is_strict():
-        #     return
+        if not safety_checks.is_strict():
+            return
 
-        # if self.is_in_keychain(path):
-        #     return
+        if self.is_in_keychain(path):
+            return
 
-        # raise FORBIDDEN_KEY_PATH
-        return
+        raise FORBIDDEN_KEY_PATH
 
     def is_in_keychain(self, path: paths.Bip32Path) -> bool:
         return any(schema.match(path) for schema in self.schemas)
