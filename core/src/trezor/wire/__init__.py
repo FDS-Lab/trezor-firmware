@@ -74,7 +74,6 @@ experimental_enabled: bool = False
 
 
 def add(wire_type: int, pkgname: str, modname: str) -> None:
-    print("add", wire_type, pkgname, modname)
     """Shortcut for registering a dynamically-imported Protobuf workflow."""
     workflow_packages[wire_type] = (pkgname, modname)
 
@@ -319,8 +318,6 @@ async def handle_session(
                 # de-synchronized wire communication, report with a message
                 # header is eventually received, after a couple of tries.
                 msg = await ctx.read_from_wire()
-                # log.exception(__name__,msg)
-                # log.debug(__name__, "xxx: {}".format(msg))
 
                 if __debug__:
                     try:
@@ -339,7 +336,6 @@ async def handle_session(
                 # this message instead of waiting for new one.
                 msg = next_msg
                 next_msg = None
-            print("zz")
 
             # Now we are in a middle of reading a message and we need to decide
             # what to do with it, based on its type from the message header.
@@ -353,7 +349,7 @@ async def handle_session(
             # We need to find a handler for this message type.  Should not
             # raise.
             handler = find_handler(iface, msg.type)
-            print("hadler",handler)
+
             if handler is None:
                 # If no handler is found, we can skip decoding and directly
                 # respond with failure.  Should not raise.

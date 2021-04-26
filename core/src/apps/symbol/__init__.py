@@ -9,4 +9,4 @@ PATTERN = "m/44'/coin_type'/account'/change'/address_index'"
 
 
 def boot() -> None:
-    wire.add(MessageType.NEM2GetPublicKey, __name__, "get_public_key")
+    wire.add(MessageType.SymbolGetPublicKey, __name__, "get_public_key")

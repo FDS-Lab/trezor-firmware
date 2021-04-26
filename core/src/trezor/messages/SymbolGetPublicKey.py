@@ -10,18 +10,21 @@ if __debug__:
         pass
 
 
-class NEM2PublicKey(p.MessageType):
-    MESSAGE_WIRE_TYPE = 89
+class SymbolGetPublicKey(p.MessageType):
+    MESSAGE_WIRE_TYPE = 88
 
     def __init__(
         self,
         *,
-        public_key: bytes,
+        address_n: Optional[List[int]] = None,
+        show_display: Optional[bool] = None,
     ) -> None:
-        self.public_key = public_key
+        self.address_n = address_n if address_n is not None else []
+        self.show_display = show_display
 
     @classmethod
     def get_fields(cls) -> Dict:
         return {
-            1: ('public_key', p.BytesType, p.FLAG_REQUIRED),
+            1: ('address_n', p.UVarintType, p.FLAG_REPEATED),
+            2: ('show_display', p.BoolType, None),
         }

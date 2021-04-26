@@ -107,7 +107,6 @@ def close(task: Task) -> None:
 
 
 def run() -> None:
-    log.debug(__name__, "in loop run")
     """
     Loop forever, stepping through scheduled tasks and awaiting I/O events
     in between.  Use `schedule` first to add a coroutine to the task queue.

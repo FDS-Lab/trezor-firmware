@@ -1,8 +1,8 @@
 from ubinascii import hexlify
 
 from trezor import log, wire
-from trezor.messages.NEM2PublicKey import NEM2PublicKey
-from trezor.messages.NEM2GetPublicKey import NEM2GetPublicKey
+from trezor.messages.SymbolPublicKey import SymbolPublicKey
+from trezor.messages.SymbolGetPublicKey import SymbolGetPublicKey
 from trezor.messages.HDNodeType import HDNodeType
 from trezor.ui.layouts import show_pubkey
 
@@ -16,8 +16,8 @@ from . import CURVE, PATTERN, SLIP44_ID
 # @auto_keychain(__name__)
 @with_slip44_keychain(PATTERN, slip44_id=SLIP44_ID, curve=CURVE)
 async def get_public_key(
-    ctx: wire.Context, msg: NEM2GetPublicKey, keychain: Keychain
-) -> NEM2PublicKey:
+    ctx: wire.Context, msg: SymbolGetPublicKey, keychain: Keychain
+) -> SymbolPublicKey:
     await paths.validate_path(
         ctx,
         keychain,
@@ -38,9 +38,9 @@ async def get_public_key(
 
 def _get_public_key(
     keychain: Keychain, derivation_path: list[int]
-) -> NEM2PublicKey:
+) -> SymbolPublicKey:
     node = keychain.derive(derivation_path)
     public_key = remove_ed25519_prefix(node.public_key())
 
-    return NEM2PublicKey(public_key=public_key)
+    return SymbolPublicKey(public_key=public_key)
 

@@ -89,7 +89,6 @@ class Keychain:
     ) -> None:
         self.seed = seed
         self.curve = curve
-        print("schemas", schemas)
         self.schemas = tuple(schemas)
         self.slip21_namespaces = tuple(slip21_namespaces)
 

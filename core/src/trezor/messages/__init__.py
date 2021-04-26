@@ -25,7 +25,6 @@ def get_type(wire_type: int) -> MessageClass:
         # message class is explicitly registered
         msg_type = registered[wire_type]
     else:
-        # print("type_to_name", type_to_name)
         # import message class from trezor.messages dynamically
         name = type_to_name[wire_type]
         module = __import__("trezor.messages.%s" % name, None, None, (name,), 0)

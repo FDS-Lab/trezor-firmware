@@ -158,26 +158,21 @@ class PathSchema:
                 self.schema.append((parse(component),))
 
     def match(self, path: Bip32Path) -> bool:
-        print("keychain.match",path)
         # The path must not be _shorter_ than schema. It may be longer.
         if len(path) < len(self.schema):
             return False
-        print("pass")
+
         path_iter = iter(path)
         # iterate over length of schema, consuming path components
         for expected in self.schema:
             value = next(path_iter)
-            print("iterate1",value, expected)
             if value not in expected:
                 return False
-        print("pass2")
 
         # iterate over remaining path components
         for value in path_iter:
             if value not in self.trailing_components:
                 return False
-        print("pass3")
-
 
         return True
 
