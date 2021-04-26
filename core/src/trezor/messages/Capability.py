@@ -24,7 +24,6 @@ if not utils.BITCOIN_ONLY:
     Stellar: Literal[12] = 12
     Tezos: Literal[13] = 13
     U2F: Literal[14] = 14
-    NEM2: Literal[15] = 15
 Shamir: Literal[15] = 15
 ShamirGroups: Literal[16] = 16
 PassphraseEntry: Literal[17] = 17
