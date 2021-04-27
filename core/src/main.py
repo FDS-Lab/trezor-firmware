@@ -24,6 +24,7 @@ def _boot_apps() -> None:
         import apps.lisk
         import apps.monero
         import apps.nem
+        import apps.symbol
         import apps.stellar
         import apps.ripple
         import apps.cardano
@@ -45,6 +46,7 @@ def _boot_apps() -> None:
         apps.lisk.boot()
         apps.monero.boot()
         apps.nem.boot()
+        apps.symbol.boot()
         apps.stellar.boot()
         apps.ripple.boot()
         apps.cardano.boot()
